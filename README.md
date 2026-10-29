@@ -3,6 +3,22 @@
 Organizador de sesiones de estudio para Windows: temporizadores con métodos probados,
 notas en Markdown, repasos espaciados y estadísticas. 100 % local, sin cuentas ni nube.
 
+**[⬇ Descargar el instalador para Windows](https://github.com/AndrewQuest/kaizen-study/releases/latest)**
+
+## Capturas
+
+| Hoy | Sesión de estudio |
+|---|---|
+| ![Hoy](docs/screenshots/hoy.png) | ![Sesión](docs/screenshots/sesion.png) |
+
+| Notas (editor híbrido con LaTeX y código) | Modo cuaderno |
+|---|---|
+| ![Notas](docs/screenshots/notas.png) | ![Modo cuaderno](docs/screenshots/modo-cuaderno.png) |
+
+**Calendario: estudios planificados, repasos y exámenes**
+
+![Calendario](docs/screenshots/calendario.png)
+
 ## Stack
 
 | Capa | Tecnología |
