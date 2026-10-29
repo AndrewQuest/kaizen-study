@@ -1,0 +1,266 @@
+/* Fluent (Windows 11) inspired tokens. Light is the default; dark via [data-theme="dark"]. */
+:root {
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --mono: "Cascadia Code", Consolas, monospace;
+
+  --bg: #f3f3f3;
+  --layer: rgba(255, 255, 255, 0.72);
+  --layer-solid: #fbfbfb;
+  --card: rgba(255, 255, 255, 0.85);
+  --card-hover: rgba(249, 249, 249, 0.9);
+  --stroke: rgba(0, 0, 0, 0.0578);
+  --stroke-strong: rgba(0, 0, 0, 0.14);
+  --text: #1a1a1a;
+  --text-2: #5d5d5d;
+  --text-3: #8a8a8a;
+  --accent: #005fb8;
+  --accent-hover: #0067c0;
+  --accent-text: #ffffff;
+  --accent-soft: rgba(0, 95, 184, 0.1);
+  --focus: #005fb8;
+  --break: #0f7b0f;
+  --break-soft: rgba(15, 123, 15, 0.12);
+  --danger: #c42b1c;
+  --warning: #9d5d00;
+  --subtle: rgba(0, 0, 0, 0.037);
+  --subtle-2: rgba(0, 0, 0, 0.06);
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.14), 0 32px 64px rgba(0, 0, 0, 0.18);
+  --radius: 8px;
+  --radius-sm: 4px;
+  --radius-lg: 12px;
+
+  /* Markdown code: inline + VS Code "Light+" blocks */
+  --inline-code-bg: rgba(175, 184, 193, 0.28);
+  --inline-code-fg: #1f2328;
+  --code-bg: #f8f8f8;
+  --code-fg: #1f1f1f;
+  --code-border: rgba(0, 0, 0, 0.1);
+  --code-muted: #6e7781;
+  --code-lineno: #237893;
+  --code-hover: rgba(0, 0, 0, 0.06);
+  --tok-keyword: #0000ff;
+  --tok-control: #af00db;
+  --tok-string: #a31515;
+  --tok-number: #098658;
+  --tok-comment: #008000;
+  --tok-function: #795e26;
+  --tok-variable: #001080;
+  --tok-type: #267f99;
+  --tok-tag: #800000;
+  --tok-regexp: #811f3f;
+  --tok-punct: #1f1f1f;
+
+  color-scheme: light;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme="dark"] {
+  --bg: #202020;
+  --layer: rgba(58, 58, 58, 0.3);
+  --layer-solid: #272727;
+  --card: rgba(255, 255, 255, 0.0512);
+  --card-hover: rgba(255, 255, 255, 0.0837);
+  --stroke: rgba(255, 255, 255, 0.0698);
+  --stroke-strong: rgba(255, 255, 255, 0.16);
+  --text: #ffffff;
+  --text-2: #cfcfcf;
+  --text-3: #9a9a9a;
+  --accent: #60cdff;
+  --accent-hover: #5ab9e6;
+  --accent-text: #000000;
+  --accent-soft: rgba(96, 205, 255, 0.12);
+  --focus: #60cdff;
+  --break: #6ccb5f;
+  --break-soft: rgba(108, 203, 95, 0.14);
+  --danger: #ff99a4;
+  --warning: #fce100;
+  --subtle: rgba(255, 255, 255, 0.06);
+  --subtle-2: rgba(255, 255, 255, 0.09);
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3), 0 32px 64px rgba(0, 0, 0, 0.45);
+  /* VS Code "Dark+" */
+  --inline-code-bg: rgba(110, 118, 129, 0.4);
+  --inline-code-fg: #e6edf3;
+  --code-bg: #1e1e1e;
+  --code-fg: #d4d4d4;
+  --code-border: rgba(255, 255, 255, 0.08);
+  --code-muted: #8b949e;
+  --code-lineno: #858585;
+  --code-hover: rgba(255, 255, 255, 0.08);
+  --tok-keyword: #569cd6;
+  --tok-control: #c586c0;
+  --tok-string: #ce9178;
+  --tok-number: #b5cea8;
+  --tok-comment: #6a9955;
+  --tok-function: #dcdcaa;
+  --tok-variable: #9cdcfe;
+  --tok-type: #4ec9b0;
+  --tok-tag: #569cd6;
+  --tok-regexp: #d16969;
+  --tok-punct: #d4d4d4;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+/* With Mica the window itself provides the backdrop. */
+html.mica, html.mica body { background: transparent; }
+
+h1, h2, h3 { font-family: var(--font-display); margin: 0; font-weight: 600; }
+h1 { font-size: 28px; line-height: 36px; }
+h2 { font-size: 20px; line-height: 28px; }
+h3 { font-size: 14px; line-height: 20px; }
+p { margin: 0; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+/* Long option texts (e.g. microphone names) must not push the layout wider. */
+select { max-width: 100%; text-overflow: ellipsis; }
+/* App chrome behaves like a native app: no accidental text selection on controls. */
+button, nav, .btn, .chip, label { user-select: none; }
+input[type="number"] {
+  min-height: 32px; padding: 5px 10px; width: 100%;
+  border-radius: var(--radius-sm); border: 1px solid var(--stroke-strong);
+  border-bottom-color: var(--text-3); background: var(--card); outline: none;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 32px; padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--stroke-strong);
+  background: var(--card);
+  cursor: default; white-space: nowrap;
+  transition: background 0.1s;
+}
+.btn:hover { background: var(--card-hover); }
+.btn:active { opacity: 0.8; }
+.btn:disabled { opacity: 0.45; pointer-events: none; }
+.btn.primary { background: var(--accent); color: var(--accent-text); border-color: transparent; }
+.btn.primary:hover { background: var(--accent-hover); }
+.btn.danger { color: var(--danger); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover { background: var(--subtle); }
+.btn.big { min-height: 44px; padding: 10px 22px; font-size: 15px; font-weight: 600; border-radius: var(--radius); }
+.btn.icon { padding: 4px 8px; min-width: 36px; min-height: 34px; font-size: 17px; line-height: 1; }
+
+input[type="text"], input[type="date"], input[type="search"], select, textarea {
+  min-height: 32px; padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--stroke-strong);
+  border-bottom-color: var(--text-3);
+  background: var(--card);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus { border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
+textarea { resize: none; line-height: 1.55; }
+select option { background: var(--layer-solid); }
+label.field { display: grid; gap: 6px; font-size: 13px; color: var(--text-2); min-width: 0; }
+/* Inputs have an intrinsic minimum width (~20 characters): without this a narrow field
+   (e.g. the emoji box) overflows and covers the field next to it. */
+label.field > input:not([type="checkbox"]):not([type="radio"]),
+label.field > select,
+label.field > textarea { width: 100%; min-width: 0; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.muted { color: var(--text-2); }
+.faint { color: var(--text-3); font-size: 12px; }
+.row { display: flex; align-items: center; gap: 8px; }
+.grow { flex: 1; min-width: 0; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 10px; border-radius: 999px; font-size: 12px;
+  background: var(--subtle-2); color: var(--text-2);
+}
+
+.page { padding: 28px 36px 40px; overflow: auto; height: 100%; }
+.page-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+/* The title keeps at least 200px; when there's no room the buttons drop to the next line. */
+.page-head .grow { flex: 1 1 200px; overflow-wrap: break-word; }
+
+.empty { padding: 32px; text-align: center; color: var(--text-2); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--subtle-2); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-3); }
+
+/* Rendered Markdown */
+.md { line-height: 1.6; overflow-wrap: anywhere; }
+.md h1, .md h2, .md h3 { margin: 1em 0 0.4em; }
+.md h1:first-child, .md h2:first-child, .md h3:first-child { margin-top: 0; }
+.md p, .md ul, .md ol, .md blockquote, .md pre, .md table { margin: 0 0 0.8em; }
+.md code { font-family: var(--mono); background: var(--subtle-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+.md pre { background: var(--subtle); padding: 12px; border-radius: var(--radius); overflow: auto; }
+.md pre code { background: none; padding: 0; }
+.md blockquote { border-left: 3px solid var(--accent); padding-left: 12px; color: var(--text-2); }
+.md table { border-collapse: collapse; }
+.md th, .md td { border: 1px solid var(--stroke-strong); padding: 4px 10px; }
+.md a { color: var(--accent); }
+.md img { max-width: 100%; }
+
+/* Fluent-style toggle switch */
+.toggle {
+  appearance: none; width: 40px; height: 20px; border-radius: 10px; position: relative;
+  border: 1px solid var(--text-2); background: transparent; transition: background 0.15s;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 3px; left: 4px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--text-2); transition: transform 0.15s;
+}
+.toggle:checked { background: var(--accent); border-color: var(--accent); }
+.toggle:checked::after { transform: translateX(19px); background: var(--accent-text); }
+
+/* Spell-check context menu (created by the editor, outside Svelte) */
+.spell-menu {
+  position: fixed; z-index: 200; min-width: 200px; max-width: 280px; padding: 4px;
+  display: grid; background: var(--layer-solid); color: var(--text);
+  border: 1px solid var(--stroke-strong); border-radius: var(--radius); box-shadow: var(--shadow);
+  font-size: 13px;
+}
+.spell-menu > div { display: grid; }
+.spell-title { padding: 4px 10px; color: var(--text-3); font-size: 12px; }
+.spell-none { padding: 4px 10px; color: var(--text-3); }
+.spell-item { text-align: left; padding: 6px 10px; border: 0; border-radius: var(--radius-sm); background: none; }
+.spell-item:hover { background: var(--subtle-2); }
+.spell-item.suggestion { font-weight: 600; }
+.spell-menu hr { border: 0; border-top: 1px solid var(--stroke); margin: 4px 0; }
+
+/* ---------- Rendered Markdown extras (split preview + future export/print) ---------- */
+.md .code-block {
+  position: relative; padding: 28px 16px 12px; border-radius: var(--radius);
+  background: var(--code-bg); color: var(--code-fg); border: 1px solid var(--code-border);
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.6;
+}
+.md .code-block code { background: none; padding: 0; color: inherit; }
+.md .code-lang { position: absolute; top: 6px; left: 16px; font: 12px var(--font); color: var(--code-muted); }
+.md .latex-block, .cm-md-latex { overflow-x: auto; padding: 6px 18px; }
+.md img.embed, .md video.embed { max-width: 100%; border-radius: var(--radius-sm); display: block; margin: 6px 0; }
+.md .embed-missing, .cm-md-embed.missing {
+  display: inline-block; padding: 4px 10px; border-radius: var(--radius-sm);
+  background: var(--subtle-2); color: var(--text-2); font-size: 13px;
+}
+.cm-md-embed img, .cm-md-embed video { max-width: 100%; border-radius: var(--radius-sm); vertical-align: top; margin: 4px 0; }
+/* Token colours for highlighted code outside the editor (lezer classHighlighter) */
+.tok-keyword, .tok-bool, .tok-atom, .tok-null { color: var(--tok-keyword); }
+.tok-string, .tok-string2 { color: var(--tok-string); }
+.tok-number, .tok-literal { color: var(--tok-number); }
+.tok-comment { color: var(--tok-comment); }
+.tok-variableName, .tok-propertyName, .tok-attributeName { color: var(--tok-variable); }
+.tok-typeName, .tok-className, .tok-namespace { color: var(--tok-type); }
+.tok-macroName { color: var(--tok-function); }
+.tok-operator, .tok-punctuation { color: var(--tok-punct); }
+.tok-meta, .tok-labelName { color: var(--code-muted); }
+.katex { font-size: 1.12em; }

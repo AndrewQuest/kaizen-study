@@ -1,0 +1,5 @@
+# whisper.cpp (whisper-rs) is built with CMake and needs libclang for its bindings.
+# Default install locations of `winget install Kitware.CMake LLVM.LLVM`.
+[env]
+LIBCLANG_PATH = 'C:\Program Files\LLVM\bin'
+CMAKE = 'C:\Program Files\CMake\bin\cmake.exe'

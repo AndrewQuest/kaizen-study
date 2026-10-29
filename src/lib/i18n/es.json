@@ -1,0 +1,913 @@
+{
+  "app": {
+    "name": "Kaizen Study"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "close": "Cerrar",
+    "back": "Volver",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "minutes": "{n} min",
+    "hours_short": "{h} h {m} min",
+    "none": "Nada por aquí todavía.",
+    "error": "Algo salió mal",
+    "saved": "Guardado",
+    "today": "Hoy",
+    "locale_tag": "es"
+  },
+  "nav": {
+    "today": "Hoy",
+    "subjects": "Materias",
+    "session": "Sesión",
+    "notes": "Notas",
+    "reviews": "Calendario",
+    "stats": "Estadísticas",
+    "settings": "Ajustes",
+    "expand": "Expandir menú",
+    "collapse": "Contraer menú"
+  },
+  "setup": {
+    "title": "Bienvenido a Kaizen Study",
+    "subtitle": "Tus datos se guardan solo en tu computadora. Elige la carpeta donde quieres guardarlos.",
+    "hint": "Sugerencia: Documentos\\Kaizen Study. Puedes elegir una carpeta de OneDrive para tener copia en la nube.",
+    "choose": "Elegir carpeta",
+    "dialog_title": "Carpeta de datos de Kaizen Study"
+  },
+  "today": {
+    "greeting_morning": "Buenos días",
+    "greeting_afternoon": "Buenas tardes",
+    "greeting_evening": "Buenas noches",
+    "start": "Iniciar sesión de estudio",
+    "continue": "Volver a la sesión en curso",
+    "studied_today": "Estudiado hoy",
+    "streak": "Racha",
+    "streak_days": "{n} días",
+    "due_reviews": "Repasos para hoy",
+    "no_reviews": "No tienes repasos pendientes. ¡Bien hecho!",
+    "recover_title": "Tienes una sesión sin terminar",
+    "recover_body": "La sesión de «{topic}» se interrumpió. ¿Quieres continuarla?",
+    "recover_resume": "Continuar",
+    "recover_close": "Guardar y cerrar",
+    "goal": "Meta diaria",
+    "goal_done": "¡Meta cumplida!",
+    "streak_day": "{n} día"
+  },
+  "subjects": {
+    "title": "Materias",
+    "new": "Nueva materia",
+    "name": "Nombre",
+    "color": "Color",
+    "icon": "Icono",
+    "archive": "Archivar",
+    "unarchive": "Restaurar",
+    "show_archived": "Mostrar archivadas",
+    "delete_confirm": "¿Eliminar «{name}» con todos sus temas, sesiones y notas? Esta acción no se puede deshacer.",
+    "empty": "Crea tu primera materia, por ejemplo «Matemáticas» o «Inglés».",
+    "topics": "Temas",
+    "new_topic": "Nuevo tema",
+    "topic_name": "Nombre del tema",
+    "no_topics": "Esta materia aún no tiene temas.",
+    "pick": "Selecciona una materia"
+  },
+  "topic": {
+    "status": "Estado",
+    "status_nuevo": "Nuevo",
+    "status_aprendiendo": "Aprendiendo",
+    "status_repasando": "Repasando",
+    "status_dominado": "Dominado",
+    "method": "Método",
+    "no_method": "Sin método fijo",
+    "exam_date": "Fecha de examen",
+    "exam_hint": "Se programarán repasos automáticos 7, 3, 2 y 1 día antes (método 7-3-2-1).",
+    "stage": "Etapa",
+    "stage_shu": "Shu · imitar",
+    "stage_ha": "Ha · variar",
+    "stage_ri": "Ri · crear",
+    "sessions": "Sesiones",
+    "notes": "Notas",
+    "study": "Estudiar",
+    "total": "Tiempo total",
+    "delete_confirm": "¿Eliminar el tema «{name}» con sus sesiones y notas?",
+    "no_sessions": "Todavía no hay sesiones."
+  },
+  "start": {
+    "title": "Nueva sesión",
+    "step_topic": "1. ¿Qué vas a estudiar?",
+    "step_method": "2. Elige un método",
+    "step_ready": "3. Listo",
+    "subject": "Materia",
+    "topic": "Tema",
+    "new_subject": "+ Nueva materia",
+    "new_topic": "+ Nuevo tema",
+    "begin": "Comenzar",
+    "next": "Siguiente",
+    "focus_for": "Enfoque de {n} min",
+    "break_for": "descanso de {n} min",
+    "flow_desc": "Cronómetro libre; descanso proporcional",
+    "how": "Cómo funciona",
+    "free": "Temporizador personalizado",
+    "focus_min": "Enfoque (min)",
+    "break_min": "Descanso (min)"
+  },
+  "session": {
+    "focus": "Enfoque",
+    "break": "Descanso",
+    "long_break": "Descanso largo",
+    "paused": "En pausa",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "skip": "Saltar bloque",
+    "take_break": "Tomar descanso",
+    "finish": "Terminar",
+    "mini": "Mini ventana",
+    "cycle": "Bloque {n}",
+    "focus_total": "Enfoque total",
+    "quick_notes": "Notas rápidas",
+    "quick_notes_ph": "Escribe ideas, dudas o resúmenes mientras estudias… (Markdown)",
+    "none": "No hay ninguna sesión en curso.",
+    "start": "Iniciar una sesión",
+    "finish_confirm": "¿Terminar la sesión?",
+    "rate_title": "¡Sesión terminada!",
+    "rate_body": "Estudiaste {time}. ¿Qué tal fue la sesión?",
+    "rate_skip": "Omitir",
+    "shortcut_hint": "Atajo global para pausar: {key}",
+    "notif_focus_end": "¡Buen trabajo! Toca descansar",
+    "notif_focus_end_body": "Descanso de {n} min.",
+    "notif_long_end_body": "Descanso largo de {n} min. Te lo ganaste.",
+    "notif_break_end": "Fin del descanso",
+    "notif_break_end_body": "Volvamos al enfoque.",
+    "notif_break_end_flow": "Inicia otro bloque cuando quieras.",
+    "compact": "⬆ Contraer reloj",
+    "expand": "⬇ Expandir reloj",
+    "break_now": "Descanso: {activity}",
+    "break_guide": "Cómo descansar bien",
+    "notif_activity": "Toca: {emoji} {name}"
+  },
+  "notes": {
+    "title": "Notas",
+    "new": "Nueva nota",
+    "untitled": "Sin título",
+    "title_ph": "Título de la nota",
+    "layout": "Formato",
+    "layout_libre": "Libre",
+    "layout_cornell": "Cornell",
+    "layout_feynman": "Feynman",
+    "layout_preguntas": "Preguntas (recuerdo activo)",
+    "edit": "Editar",
+    "preview": "Vista previa",
+    "split": "Dividido",
+    "search_ph": "Buscar en todas las notas…",
+    "delete_confirm": "¿Eliminar la nota «{name}»?",
+    "pick_topic": "Elige un tema para ver sus notas",
+    "empty": "Este tema aún no tiene notas.",
+    "results": "{n} resultados",
+    "cornell": {
+      "cues": "Pistas / Preguntas",
+      "notes": "Notas",
+      "summary": "Resumen"
+    },
+    "feynman": {
+      "concept": "Concepto",
+      "simple": "Explicación simple (como para un niño)",
+      "gaps": "Lagunas detectadas",
+      "analogy": "Analogía"
+    },
+    "questions": {
+      "title": "Preguntas para repasar"
+    },
+    "quick": "Notas rápidas",
+    "quick_empty": "Las notas que tomes durante una sesión aparecerán aquí.",
+    "quick_title": "Nota rápida · {date}",
+    "quick_meta": "{method} · {duration}",
+    "moved": "Pasada",
+    "move": "Pasar a nota",
+    "move_title": "Pasar nota rápida a una nota",
+    "move_new": "Crear una nota nueva",
+    "move_append": "Añadir al final de una nota existente",
+    "move_new_title": "Notas de la sesión del {date}",
+    "move_heading": "Sesión del {date}",
+    "move_done": "Nota creada a partir de la nota rápida.",
+    "free_timer": "Temporizador personalizado",
+    "quick_delete": "Borrar nota rápida",
+    "quick_delete_confirm": "¿Borrar el texto de esta nota rápida? El tiempo de estudio de la sesión se conserva.",
+    "quick_select": "Seleccionar",
+    "quick_select_done": "Listo",
+    "quick_delete_selected": "Borrar seleccionadas ({n})",
+    "quick_delete_many_confirm": "¿Borrar el texto de {n} notas rápidas? El tiempo de estudio se conserva.",
+    "layout_latex": "Fórmulas LaTeX",
+    "layout_latexdoc": "Documento LaTeX",
+    "hide_tree": "Ocultar temas",
+    "show_tree": "Mostrar temas",
+    "hide_list": "Ocultar lista de notas",
+    "show_list": "Mostrar lista de notas",
+    "notebook": "Modo cuaderno",
+    "notebook_exit": "Salir del modo cuaderno (Esc)",
+    "topics_btn": "Temas",
+    "list_btn": "Notas"
+  },
+  "reviews": {
+    "title": "Calendario",
+    "today": "Pendientes",
+    "calendar": "Calendario",
+    "how_did_it_go": "¿Cómo te fue al repasar?",
+    "facil": "Fácil",
+    "bien": "Bien",
+    "dificil": "Difícil",
+    "overdue": "Atrasado",
+    "done": "Hecho",
+    "kind_leitner": "Repetición espaciada · paso {n}",
+    "kind_examen": "Repaso pre-examen",
+    "explain": "Difícil reinicia el ciclo, Bien avanza un paso y Fácil avanza dos (1 → 3 → 7 → 14 → 30 días).",
+    "weekdays": [
+      "L",
+      "M",
+      "X",
+      "J",
+      "V",
+      "S",
+      "D"
+    ]
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "today": "Hoy",
+    "total": "Total histórico",
+    "sessions": "Sesiones",
+    "streak": "Racha actual",
+    "best_streak": "Mejor racha",
+    "last_days": "Últimos {n} días",
+    "by_subject": "Por materia",
+    "empty": "Completa tu primera sesión para ver estadísticas."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "data": "Datos",
+    "data_dir": "Carpeta de datos",
+    "change_dir": "Cambiar carpeta…",
+    "move_or_open": "¿Qué quieres hacer con la nueva carpeta?",
+    "move": "Copiar mis datos actuales allí (la carpeta anterior se conserva)",
+    "open": "Abrir los datos que ya están allí (o empezar de cero)",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "theme_system": "Igual que Windows",
+    "theme_light": "Claro",
+    "theme_dark": "Oscuro",
+    "language": "Idioma",
+    "timer": "Temporizador",
+    "sound": "Sonido al terminar un bloque",
+    "volume": "Volumen",
+    "test_sound": "Probar",
+    "notifications": "Notificaciones de Windows",
+    "shortcut": "Atajo global para pausar / reanudar",
+    "shortcut_record": "Cambiar",
+    "shortcut_press": "Pulsa la combinación…",
+    "shortcut_reset": "Restablecer",
+    "shortcut_error": "No se pudo registrar ese atajo (quizá otra app lo usa).",
+    "backup": "Respaldo",
+    "export": "Exportar respaldo…",
+    "import": "Importar respaldo…",
+    "import_confirm": "Importar reemplazará TODOS tus datos actuales (se guardará una copia de seguridad en la carpeta backups). ¿Continuar?",
+    "export_done": "Respaldo exportado correctamente.",
+    "import_done": "Respaldo importado correctamente.",
+    "auto_backup": "Se crea un respaldo automático cada semana en la carpeta «backups» (se guardan los últimos 5).",
+    "about": "Acerca de",
+    "version": "Versión {v}",
+    "daily_goal": "Meta diaria de estudio (minutos)",
+    "shortcut_failed": "El atajo global {key} no se pudo activar: otra aplicación lo está usando. Cámbialo en Ajustes.",
+    "general": "General",
+    "autostart": "Iniciar con Windows (minimizada en la bandeja)",
+    "autostart_hint": "Necesario para recibir recordatorios. Al cerrar la ventana, Kaizen Study sigue en la bandeja; usa «Salir» en su menú para cerrarla del todo.",
+    "spell": "Ortografía",
+    "spell_enabled": "Revisar ortografía",
+    "spell_langs": "Idiomas del corrector",
+    "spell_langs_hint": "Con varios idiomas, una palabra es correcta si existe en cualquiera de ellos. Clic derecho sobre una palabra subrayada para ver sugerencias.",
+    "lang_es": "Español",
+    "lang_en": "Inglés",
+    "dictionary": "Diccionario personal",
+    "dictionary_empty": "Vacío. Añade palabras con clic derecho → «Añadir al diccionario».",
+    "phone": "Notificaciones al teléfono",
+    "phone_hint": "Los mensajes viajan de este PC a ntfy, Telegram o tu proveedor de correo, y de ahí a tu teléfono. No pasan por ningún servidor de Kaizen Study. Las contraseñas y tokens se guardan en el Administrador de credenciales de Windows.",
+    "phone_events": "¿Qué enviar al teléfono?",
+    "ev_block": "Fin de cada bloque (enfoque o descanso)",
+    "ev_daily": "Recordatorio diario de repasos a las",
+    "ev_planned": "Recordatorio de estudios planificados",
+    "lead": "Antelación",
+    "lead_min": "{n} min antes",
+    "channel_on": "Activado",
+    "test": "Enviar prueba",
+    "test_ok": "Mensaje de prueba enviado.",
+    "test_title": "Kaizen Study",
+    "test_body": "¡Las notificaciones al teléfono funcionan! 🎉",
+    "saved_secret": "Guardado en Windows",
+    "not_saved": "Sin guardar",
+    "save_secret": "Guardar",
+    "ntfy_server": "Servidor",
+    "ntfy_topic": "Tema (usa un nombre difícil de adivinar)",
+    "ntfy_token": "Token de acceso (solo servidores privados)",
+    "ntfy_help": "Instala la app ntfy en tu teléfono y suscríbete al mismo tema.",
+    "telegram_token": "Token del bot",
+    "telegram_chat": "Chat",
+    "telegram_find": "Detectar chat",
+    "telegram_found": "Chat detectado: {id}",
+    "telegram_help": "1) En Telegram abre @BotFather, envía /newbot y copia el token. 2) Pégalo aquí y guárdalo. 3) Abre tu bot, pulsa «Iniciar» y luego «Detectar chat».",
+    "smtp_host": "Servidor SMTP",
+    "smtp_port": "Puerto",
+    "smtp_security": "Seguridad",
+    "smtp_user": "Tu correo (usuario)",
+    "smtp_password": "Contraseña de aplicación",
+    "smtp_to": "Enviar a (vacío = a ti mismo)",
+    "smtp_help": "Gmail: smtp.gmail.com, puerto 587, STARTTLS y una «contraseña de aplicación» (no tu contraseña normal). Outlook: smtp-mail.outlook.com, 587, STARTTLS.",
+    "editor": "Editor",
+    "editor_mode": "Vista por defecto del editor",
+    "editor_mode_hint": "Híbrida: el formato se aplica al salir de la línea. Dividida: Markdown sin formato a la izquierda y vista previa a la derecha. Puedes cambiarla en cada nota con el botón de la barra.",
+    "latex": "LaTeX",
+    "help": "¿Cómo se configura?",
+    "ui_scale": "Tamaño de la interfaz",
+    "ui_scale_hint": "Agranda o reduce todo: texto, iconos y botones. La mini ventana del reloj no cambia."
+  },
+  "tray": {
+    "show": "Mostrar Kaizen Study",
+    "toggle": "Pausar / Reanudar",
+    "finish": "Terminar sesión",
+    "quit": "Salir",
+    "focus": "Enfoque",
+    "break": "Descanso",
+    "paused": "en pausa",
+    "daily_title": "Repasos de hoy",
+    "daily_body": "Tienes {n} repaso(s) pendiente(s): {topics}",
+    "planned_title": "Estudio planificado",
+    "planned_body": "{topic} ({subject}) a las {time}"
+  },
+  "templates": {
+    "pomodoro": {
+      "name": "Pomodoro",
+      "origin": "Italia · Francesco Cirillo",
+      "summary": "Bloques de 25 minutos de enfoque total seguidos de 5 de descanso. Cada 4 bloques, un descanso largo de 15 minutos. Ideal para empezar y vencer la procrastinación.",
+      "steps": [
+        "Elige una sola tarea.",
+        "Enfócate 25 minutos sin distracciones.",
+        "Descansa 5 minutos lejos de la pantalla.",
+        "Cada 4 pomodoros, descansa 15 minutos."
+      ],
+      "break_guide": "Descansos cortos de verdad: levántate, aléjate de la pantalla y no revises redes. En el descanso largo (cada 4 bloques) sal a caminar o come algo ligero."
+    },
+    "5217": {
+      "name": "52/17",
+      "origin": "EE. UU. · estudio de productividad DeskTime",
+      "summary": "52 minutos de trabajo intenso y 17 de descanso real. Funciona bien para temas que requieren concentración profunda y sesiones largas.",
+      "steps": [
+        "Trabaja 52 minutos con intensidad.",
+        "Descansa 17 minutos: camina, estira, hidrátate.",
+        "Repite."
+      ],
+      "break_guide": "Los 17 minutos son para desconectar por completo: camina, estírate o charla con alguien. Evita el móvil, que te deja la mente igual de ocupada."
+    },
+    "flowtime": {
+      "name": "Flowtime",
+      "origin": "Variante flexible del Pomodoro",
+      "summary": "Estudias mientras dure tu concentración, sin límite fijo. Cuando notes que baja, tomas un descanso de 1/5 del tiempo trabajado.",
+      "steps": [
+        "Empieza el cronómetro y estudia.",
+        "Cuando pierdas el foco, pulsa «Tomar descanso».",
+        "El descanso dura una quinta parte de lo que estudiaste."
+      ],
+      "break_guide": "El descanso dura una quinta parte de lo que estudiaste. Úsalo para moverte e hidratarte; vuelve en cuanto suene el aviso."
+    },
+    "kaizen": {
+      "name": "Kaizen (pasos pequeños)",
+      "origin": "Japón · mejora continua",
+      "summary": "Empiezas con solo 10 minutos y cada sesión del tema suma 5 minutos más, hasta 50. Construye el hábito sin agobio: lo importante es no fallar ningún día.",
+      "steps": [
+        "Comienza con 10 minutos.",
+        "Cada nueva sesión del tema añade 5 minutos.",
+        "Prioriza la constancia diaria sobre la duración."
+      ],
+      "break_guide": "Pasos pequeños también al descansar: breve, moverse y sin pantallas. Un vaso de agua y un par de estiramientos bastan para volver con energía."
+    },
+    "shuhari": {
+      "name": "Shu-Ha-Ri",
+      "origin": "Japón · artes marciales y aprendizaje",
+      "summary": "Tres etapas para dominar algo: Shu (imitar y seguir las reglas), Ha (variar y experimentar) y Ri (crear con tus propias palabras). Incluye repasos espaciados.",
+      "steps": [
+        "Shu: copia ejemplos y sigue el libro al pie de la letra.",
+        "Ha: resuelve variaciones y compara enfoques.",
+        "Ri: enséñalo, crea tus propios ejercicios.",
+        "Avanza de etapa desde la ficha del tema."
+      ],
+      "break_guide": "Aprovecha el descanso para repasar mentalmente lo que acabas de practicar, sin mirar apuntes, mientras caminas o te estiras."
+    },
+    "feynman": {
+      "name": "Técnica Feynman",
+      "origin": "EE. UU. · Richard Feynman",
+      "summary": "Explica el concepto con palabras tan simples que lo entendería un niño. Donde te trabes, encontraste una laguna: vuelve a la fuente y simplifica.",
+      "steps": [
+        "Escribe el concepto.",
+        "Explícalo de forma simple.",
+        "Marca las lagunas y vuelve a estudiarlas.",
+        "Crea una analogía."
+      ],
+      "break_guide": "Descansa explicando en voz alta (o a alguien) lo que estudiaste. Si te trabas, apúntalo como laguna para el siguiente bloque."
+    },
+    "cornell": {
+      "name": "Notas Cornell",
+      "origin": "EE. UU. · Universidad de Cornell",
+      "summary": "Divide tus notas en pistas/preguntas, notas y resumen. Al repasar, tapa las notas y responde usando solo las pistas.",
+      "steps": [
+        "Toma notas durante el bloque.",
+        "Escribe preguntas clave en «Pistas».",
+        "Resume todo en 2-3 frases.",
+        "Repasa respondiendo las pistas."
+      ],
+      "break_guide": "Antes de descansar, escribe una pregunta en «Pistas». Luego descansa lejos del escritorio: la memoria consolida mejor con el cuerpo en movimiento."
+    },
+    "leitner": {
+      "name": "Recuerdo activo + Repetición espaciada",
+      "origin": "Alemania · Sebastian Leitner / Ebbinghaus",
+      "summary": "En vez de releer, te haces preguntas y las respondes de memoria. Los repasos se programan solos a 1, 3, 7, 14 y 30 días para fijarlo a largo plazo.",
+      "steps": [
+        "Escribe preguntas y respuestas.",
+        "Practica respondiendo sin mirar.",
+        "Al repasar, califica: Fácil, Bien o Difícil.",
+        "La app programa el siguiente repaso."
+      ],
+      "break_guide": "No releas apuntes en el descanso: deja que la memoria trabaje. Camina, respira o hidrátate; el siguiente bloque empezará con preguntas."
+    },
+    "7321": {
+      "name": "Método 7-3-2-1",
+      "origin": "Corea del Sur · preparación de exámenes",
+      "summary": "Fija la fecha del examen y la app programa repasos 7, 3, 2 y 1 día antes. Cada repaso es más corto y enfocado en lo que aún cuesta.",
+      "steps": [
+        "Define la fecha de examen en el tema.",
+        "Día -7: repaso completo.",
+        "Día -3 y -2: repaso de lo difícil.",
+        "Día -1: repaso ligero y descanso."
+      ],
+      "break_guide": "En época de examen descansa de verdad: sueño, agua y movimiento valen más que un bloque extra. Evita estudiar durante el descanso."
+    },
+    "ipsi": {
+      "name": "Bloques largos «Ipsi»",
+      "origin": "Corea del Sur · preparación del Suneung",
+      "summary": "Bloques de 50 minutos con descansos de 10, como las clases de preparación intensiva coreanas. Cada 3 bloques, un descanso largo. Para jornadas largas de estudio.",
+      "steps": [
+        "Planifica las horas del día.",
+        "Estudia 50 minutos.",
+        "Descansa 10 minutos.",
+        "Cada 3 bloques, descanso de 30 minutos."
+      ],
+      "break_guide": "Jornadas largas exigen descansos activos: camina, estírate y come algo ligero en el descanso largo. Mantén horarios fijos para comer y dormir."
+    }
+  },
+  "editor": {
+    "plain_text": "texto",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "link_text": "texto del enlace",
+    "column": "Columna {n}",
+    "h1": "Título grande",
+    "h2": "Subtítulo",
+    "h3": "Título pequeño",
+    "bold": "Negrita (Ctrl+B)",
+    "italic": "Cursiva (Ctrl+I)",
+    "strike": "Tachado (Ctrl+Shift+X)",
+    "code": "Código en línea (Ctrl+E)",
+    "codeblock": "Bloque de código (Ctrl+Shift+E)",
+    "bullet": "Lista con viñetas",
+    "numbered": "Lista numerada",
+    "task": "Lista de tareas",
+    "quote": "Cita o definición",
+    "link": "Enlace (Ctrl+K)",
+    "table": "Tabla",
+    "rule": "Separador",
+    "guide": "Guía de Markdown",
+    "choose_language": "¿En qué lenguaje?",
+    "hint": "Escribe con Markdown: el formato se aplica cuando sales de la línea.",
+    "mode_hybrid": "Vista híbrida",
+    "mode_split": "Vista dividida",
+    "mode_toggle": "Cambiar vista (híbrida / dividida)",
+    "latex": "Bloque de fórmula LaTeX (∑)",
+    "media": "Insertar imagen o video",
+    "media_filter": "Imágenes y videos",
+    "dictate": "Dictar (Ctrl+Shift+D)",
+    "dictate_stop": "Parar y transcribir (Ctrl+Shift+D)",
+    "dictating": "Grabando…",
+    "transcribing": "Transcribiendo…",
+    "dictation_lang": "Idioma del dictado",
+    "no_model": "Para dictar, descarga primero un modelo en Ajustes → Dictado.",
+    "lang_es": "ES",
+    "lang_en": "EN",
+    "lang_auto": "Auto",
+    "missing_file": "Archivo no encontrado: {name}",
+    "link_hint": "Ctrl + clic para abrir",
+    "locked": "Lectura",
+    "unlocked": "Edición",
+    "lock_hint": "Modo lectura: los enlaces se abren con un clic. Doble clic sobre el texto (o este botón) para editar.",
+    "unlock_hint": "Bloquear la nota (modo lectura)"
+  },
+  "guide": {
+    "title": "Guía de Markdown",
+    "subtitle": "¿Qué quieres hacer?",
+    "when": "¿Cuándo usarlo?",
+    "how": "Cómo se hace",
+    "tip": "Consejo",
+    "write": "Escribe esto",
+    "result": "Se verá así",
+    "insert": "Insertar en mi nota",
+    "copy": "Copiar ejemplo",
+    "copied": "Ejemplo copiado",
+    "shortcuts": "Atajos de teclado",
+    "intro_title": "¿Qué es Markdown?",
+    "intro_body": "Markdown es una forma muy sencilla de dar formato a tus apuntes usando símbolos del teclado, sin menús ni botones. Por ejemplo, si escribes **hola** se verá en negrita. En Kaizen Study el formato se aplica en cuanto sales de la línea; si vuelves a ella, verás los símbolos para poder editarlos. También puedes usar los botones de la barra superior sin memorizar nada.",
+    "intro_steps": [
+      "Elige en la lista de la izquierda lo que quieres hacer.",
+      "Mira el ejemplo y cómo se verá.",
+      "Pulsa «Insertar en mi nota» para probarlo."
+    ],
+    "shortcut_list": [
+      [
+        "Ctrl + B",
+        "Negrita"
+      ],
+      [
+        "Ctrl + I",
+        "Cursiva"
+      ],
+      [
+        "Ctrl + Shift + X",
+        "Tachado"
+      ],
+      [
+        "Ctrl + E",
+        "Código en línea"
+      ],
+      [
+        "Ctrl + Shift + E",
+        "Bloque de código"
+      ],
+      [
+        "Ctrl + K",
+        "Enlace"
+      ],
+      [
+        "Tab / Shift + Tab",
+        "Aumentar / reducir sangría (sublistas)"
+      ],
+      [
+        "Enter en una lista",
+        "Crea el siguiente elemento"
+      ],
+      [
+        "Ctrl + Z / Ctrl + Y",
+        "Deshacer / rehacer"
+      ]
+    ],
+    "items": [
+      {
+        "id": "headings",
+        "icon": "H",
+        "title": "Títulos y subtítulos",
+        "when": "Para organizar tus apuntes en secciones.",
+        "how": "Escribe uno o más # al inicio de la línea, seguidos de un espacio. Cuantos más #, más pequeño es el título.",
+        "example": "# Tema principal\n## Subtema\n### Detalle",
+        "tip": "Usa un solo # para el título principal de la nota y ## para cada sección."
+      },
+      {
+        "id": "emphasis",
+        "icon": "B",
+        "title": "Negrita, cursiva y tachado",
+        "when": "Para resaltar palabras clave, fechas o fórmulas importantes.",
+        "how": "Rodea el texto con símbolos: **negrita**, *cursiva* o ~~tachado~~.",
+        "example": "La **mitocondria** es la *central energética* de la célula.\n~~Dato incorrecto~~ → dato corregido.",
+        "tip": "Selecciona una palabra y pulsa Ctrl+B para ponerla en negrita al instante."
+      },
+      {
+        "id": "bullets",
+        "icon": "•",
+        "title": "Listas con viñetas",
+        "when": "Para enumerar ideas sin un orden concreto.",
+        "how": "Empieza la línea con un guion (-) y un espacio. Pulsa Enter para seguir la lista y Tab para crear una sublista.",
+        "example": "- Ventajas\n  - Rápido\n  - Barato\n- Desventajas\n  - Consume mucha energía",
+        "tip": "Pulsa Enter dos veces para terminar la lista."
+      },
+      {
+        "id": "numbered",
+        "icon": "1.",
+        "title": "Listas numeradas",
+        "when": "Para pasos o procesos que siguen un orden.",
+        "how": "Empieza la línea con 1. y un espacio. Al pulsar Enter, el siguiente número se escribe solo.",
+        "example": "1. Leer el capítulo\n2. Hacer un resumen\n3. Responder las preguntas",
+        "tip": ""
+      },
+      {
+        "id": "tasks",
+        "icon": "☑",
+        "title": "Listas de tareas",
+        "when": "Para pendientes de estudio que puedes ir marcando.",
+        "how": "Escribe - [ ] y un espacio para una tarea. Haz clic en la casilla para marcarla como hecha.",
+        "example": "- [x] Repasar vocabulario\n- [ ] Hacer los ejercicios 1 a 10\n- [ ] Preparar el resumen",
+        "tip": "Las tareas marcadas se muestran tachadas."
+      },
+      {
+        "id": "quotes",
+        "icon": "❝",
+        "title": "Citas y definiciones",
+        "when": "Para definiciones, citas textuales o ideas que debes recordar.",
+        "how": "Empieza la línea con > y un espacio.",
+        "example": "> **Definición:** la derivada mide cómo cambia una función cuando cambia su variable.",
+        "tip": ""
+      },
+      {
+        "id": "inline_code",
+        "icon": "`",
+        "title": "Código dentro de una frase",
+        "when": "Para nombrar comandos, funciones o fórmulas dentro de un texto.",
+        "how": "Rodea el texto con acentos graves (`), la tecla que está junto a la P o al 1, según tu teclado.",
+        "example": "Usa `print()` para mostrar texto en Python y `len()` para contar elementos.",
+        "tip": "Atajo: selecciona el texto y pulsa Ctrl+E."
+      },
+      {
+        "id": "code_blocks",
+        "icon": "{ }",
+        "title": "Bloques de código (estilo VS Code)",
+        "when": "Para escribir programas o comandos con colores, como en Visual Studio Code.",
+        "how": "Escribe tres acentos graves (```) seguidos del nombre del lenguaje: python, javascript, typescript, java, csharp, cpp, c, rust, go, sql, html, css, json, bash, powershell… Debajo va tu código y al final cierras con otros ```.",
+        "example": "```python\ndef saludar(nombre):\n    # Muestra un saludo personalizado\n    print(f\"Hola, {nombre}\")\n\nsaludar(\"Ana\")\n```",
+        "tip": "Usa el botón { } de la barra para elegir el lenguaje sin escribirlo. El botón Copiar del bloque copia solo el código."
+      },
+      {
+        "id": "links",
+        "icon": "🔗",
+        "title": "Enlaces",
+        "when": "Para guardar fuentes, videos o páginas de referencia.",
+        "how": "Escribe el texto entre corchetes y la dirección entre paréntesis: [texto](dirección).",
+        "example": "Repasa el [video de la clase](https://www.youtube.com) antes del examen.",
+        "tip": "Atajo: Ctrl+K."
+      },
+      {
+        "id": "tables",
+        "icon": "▦",
+        "title": "Tablas",
+        "when": "Para comparar conceptos, fechas, fórmulas o vocabulario.",
+        "how": "Separa las columnas con | y pon una fila de --- debajo de los títulos.",
+        "example": "| Palabra | Significado |\n| --- | --- |\n| Apple | Manzana |\n| Book | Libro |",
+        "tip": "Las columnas no tienen que quedar alineadas: la tabla se ordena sola al salir de ella."
+      },
+      {
+        "id": "rule",
+        "icon": "—",
+        "title": "Separadores",
+        "when": "Para dividir una nota en partes.",
+        "how": "Deja una línea en blanco y escribe --- en una línea vacía.",
+        "example": "Parte 1: teoría\n\n---\n\nParte 2: ejercicios",
+        "tip": ""
+      },
+      {
+        "id": "latex",
+        "icon": "∑",
+        "title": "Fórmulas LaTeX",
+        "when": "Para escribir fórmulas matemáticas, físicas o químicas con buen formato.",
+        "how": "Escribe un bloque que empiece con ```latex y termine con ```. Dentro va la fórmula en LaTeX. Al salir del bloque se muestra la fórmula. También puedes usar el botón ∑ de la barra. Para notas hechas solo de fórmulas, cambia el «Formato» de la nota a «Fórmulas LaTeX»; para un documento LaTeX completo con PDF, elige «Documento LaTeX».",
+        "example": "```latex\nx = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\n```",
+        "tip": "\\frac{a}{b} fracción · x^2 potencia · x_i subíndice · \\sqrt{x} raíz · \\int_a^b integral · \\sum_{i=1}^n suma · \\alpha \\beta \\pi letras griegas."
+      },
+      {
+        "id": "media",
+        "icon": "🖼",
+        "title": "Imágenes y videos",
+        "when": "Para añadir capturas, diagramas, fotos de la pizarra o videos cortos.",
+        "how": "Pega una imagen con Ctrl+V, arrastra un archivo a la nota o usa el botón 🖼 de la barra. Se copia a la carpeta «adjuntos» de tus datos y se escribe como ![[nombre.png]]. Para elegir el ancho en píxeles, añade |ancho: ![[nombre.png|300]].",
+        "example": "![[diagrama.png|300]]\n![[experimento.mp4]]",
+        "tip": "Imágenes: png, jpg, gif, webp, svg, bmp. Videos: mp4 y webm. Los adjuntos se incluyen en los respaldos .kaizen."
+      },
+      {
+        "id": "web_links",
+        "icon": "🌐",
+        "title": "Pegar enlaces de páginas y videos",
+        "when": "Para guardar un video de YouTube o una página web con su título.",
+        "how": "Copia la dirección en el navegador y pégala en la nota con Ctrl+V: se escribe [](dirección) con el cursor entre los corchetes, listo para que escribas el título. Si antes seleccionas un texto de tu nota y pegas la dirección encima, ese texto se convierte en el enlace. Para abrir un enlace, mantén Ctrl y haz clic sobre él.",
+        "example": "[Derivadas: regla de la cadena](https://www.youtube.com/watch?v=...)",
+        "tip": "Funciona igual con videos de YouTube y con cualquier página web. Un clic normal sobre el enlace sirve para editarlo."
+      },
+      {
+        "id": "dictation",
+        "icon": "🎤",
+        "title": "Dictado por voz",
+        "when": "Para tomar notas hablando, sin escribir.",
+        "how": "Pulsa 🎤 en la barra (o Ctrl+Shift+D), habla y vuelve a pulsar para parar. El texto aparece donde está el cursor. Elige el idioma (ES, EN o Auto) junto al micrófono. Antes, descarga un modelo en Ajustes → Dictado.",
+        "example": "",
+        "tip": "Los modelos pequeños son rápidos; los grandes, más precisos. Todo se procesa en tu PC."
+      },
+      {
+        "id": "views",
+        "icon": "◫",
+        "title": "Vista híbrida o dividida",
+        "when": "Para elegir cómo ves tus notas mientras escribes.",
+        "how": "Vista híbrida: el formato se aplica al salir de cada línea. Vista dividida: a la izquierda el Markdown sin formato y a la derecha la vista previa. Cambia con el botón ◫ de la barra o elige la vista por defecto en Ajustes → Editor. En la vista híbrida, el botón flotante 🔒 Lectura bloquea la nota: los enlaces se abren con un clic y las casillas se pueden marcar, pero no se edita por accidente. Haz doble clic sobre cualquier parte para editar ahí mismo, o pulsa el botón. Las notas guardadas se abren en lectura.",
+        "example": "",
+        "tip": ""
+      }
+    ]
+  },
+  "breaks": {
+    "title": "Plan de descansos",
+    "hint": "Elige qué harás en cada descanso. Si hay más descansos, el plan se repite en ciclo.",
+    "slot": "Descanso {n}",
+    "none": "Sin actividad",
+    "add": "+ Añadir descanso",
+    "remove": "Quitar",
+    "activities": "Actividades de descanso",
+    "activities_hint": "Puedes editar las predefinidas o crear las tuyas.",
+    "new": "+ Nueva actividad",
+    "name": "Nombre",
+    "emoji": "Emoji",
+    "instructions": "Instrucciones breves",
+    "default_plan": "Plan por defecto de cada método",
+    "default_plan_hint": "Se usa al iniciar una sesión con ese método (puedes cambiarlo en el paso 3).",
+    "method": "Método",
+    "delete_confirm": "¿Eliminar la actividad «{name}»?",
+    "custom": "+ Actividad personalizada",
+    "custom_title": "Actividad personalizada",
+    "custom_save": "Guardar en mis actividades",
+    "custom_add": "Añadir al plan",
+    "session_only": "solo esta sesión"
+  },
+  "calendar": {
+    "title": "Calendario",
+    "plan": "+ Planificar estudio",
+    "plan_title": "Planificar estudio",
+    "edit_title": "Editar estudio planificado",
+    "topic": "Tema",
+    "date": "Fecha",
+    "time": "Hora",
+    "duration": "Duración (min)",
+    "method": "Método",
+    "any_method": "El del tema",
+    "repeat": "Repetir cada semana",
+    "repeat_days": "Días",
+    "repeat_until": "Hasta (opcional)",
+    "weekdays_long": [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+      "Domingo"
+    ],
+    "delete": "Eliminar (toda la serie)",
+    "delete_confirm": "¿Eliminar este estudio planificado y todas sus repeticiones?",
+    "start": "Empezar",
+    "next7": "Próximos 7 días",
+    "nothing": "Nada planificado.",
+    "exams": "Exámenes",
+    "no_exams": "Sin exámenes próximos. Añade la fecha en la ficha de un tema.",
+    "exam_in": "en {n} días",
+    "exam_tomorrow": "mañana",
+    "exam_today": "¡hoy!",
+    "exam": "Examen",
+    "heatmap": "Constancia del último año",
+    "heatmap_less": "Menos",
+    "heatmap_more": "Más",
+    "planned": "Planificado",
+    "review": "Repaso",
+    "today_planned": "Planificado para hoy",
+    "need_topic": "Primero crea una materia y un tema."
+  },
+  "spell": {
+    "suggestions": "Sugerencias",
+    "no_suggestions": "Sin sugerencias",
+    "add": "Añadir al diccionario",
+    "ignore": "Ignorar"
+  },
+  "latex": {
+    "formulas_hint": "Cada bloque separado por una línea en blanco se muestra como una fórmula.",
+    "compile": "Compilar",
+    "compiling": "Compilando…",
+    "compiled": "Compilado",
+    "error": "Error al compilar",
+    "show_log": "Ver registro",
+    "export": "Exportar PDF",
+    "export_done": "PDF exportado.",
+    "not_installed": "Para compilar documentos LaTeX hace falta el compilador Tectonic (~30 MB).",
+    "first_run": "La primera compilación descarga los paquetes LaTeX necesarios y puede tardar un poco.",
+    "install": "Descargar compilador",
+    "installing": "Descargando… {p}",
+    "uninstall": "Eliminar compilador",
+    "installed": "Compilador instalado",
+    "empty_pdf": "El PDF aparecerá aquí al compilar."
+  },
+  "dictation": {
+    "title": "Dictado (Whisper, local)",
+    "hint": "El audio se transcribe en tu PC; no sale a internet. Solo se guarda un modelo a la vez: al cambiarlo se borra el anterior. Los modelos se descargan de Hugging Face (repositorio oficial de whisper.cpp).",
+    "model": "Modelo",
+    "size": "{n} MB",
+    "accuracy": "Precisión",
+    "speed": "Velocidad",
+    "use": "Descargar y usar",
+    "active": "En uso",
+    "remove": "Eliminar",
+    "downloading": "Descargando… {p}",
+    "replace_confirm": "Se descargará «{new}» y se borrará «{old}». ¿Continuar?",
+    "lang_default": "Idioma por defecto",
+    "lang_es": "Español",
+    "lang_en": "Inglés",
+    "lang_auto": "Automático",
+    "models": {
+      "tiny": "Muy rápido, precisión básica",
+      "base": "Rápido, precisión aceptable",
+      "small": "Equilibrado: buena precisión",
+      "medium": "Muy buena precisión, lento",
+      "large-v3-turbo": "Excelente precisión, velocidad media",
+      "large-v3": "La mejor precisión, muy lento"
+    },
+    "device": "Micrófono",
+    "device_default": "Predeterminado de Windows",
+    "device_refresh": "Actualizar lista",
+    "device_missing": "{name} (no conectado)"
+  },
+  "phone_help": {
+    "title": "Cómo configurar las notificaciones",
+    "official": "Documentación oficial",
+    "ntfy": {
+      "name": "ntfy",
+      "intro": "ntfy es una app gratuita y de código abierto que recibe notificaciones enviadas a un «tema». No necesitas crear cuenta.",
+      "steps": [
+        "Instala la app ntfy en tu teléfono (Google Play, F-Droid o App Store).",
+        "Abre la app, pulsa «+» y suscríbete a un tema con un nombre largo y difícil de adivinar, por ejemplo: kaizen-ana-7f3k9x. Cualquiera que conozca el nombre podría leer tus avisos.",
+        "En Kaizen Study, escribe el mismo tema en «Tema». Deja el servidor en https://ntfy.sh.",
+        "Activa el canal y pulsa «Enviar prueba».",
+        "Opcional: si usas tu propio servidor ntfy con usuarios, escribe su dirección y un token de acceso."
+      ],
+      "links": [
+        [
+          "Guía para suscribirse desde el teléfono",
+          "https://docs.ntfy.sh/subscribe/phone/"
+        ],
+        [
+          "Instalar tu propio servidor ntfy",
+          "https://docs.ntfy.sh/install/"
+        ],
+        [
+          "Tokens de acceso",
+          "https://docs.ntfy.sh/config/#access-tokens"
+        ]
+      ]
+    },
+    "telegram": {
+      "name": "Telegram",
+      "intro": "Creas tu propio bot de Telegram, que solo te escribirá a ti. Es gratis y tarda dos minutos.",
+      "steps": [
+        "En Telegram, busca @BotFather (con la marca azul de verificado) y ábrelo.",
+        "Envía /newbot, elige un nombre y un usuario que termine en «bot» (por ejemplo, kaizen_ana_bot).",
+        "BotFather te dará un token parecido a 123456789:ABC-def… Cópialo.",
+        "En Kaizen Study, pégalo en «Token del bot» y pulsa «Guardar» (se guarda en Windows).",
+        "Abre tu bot en Telegram y pulsa «Iniciar» (o envíale cualquier mensaje).",
+        "Vuelve a Kaizen Study y pulsa «Detectar chat». Activa el canal y pulsa «Enviar prueba»."
+      ],
+      "links": [
+        [
+          "Cómo crear un bot con BotFather",
+          "https://core.telegram.org/bots/features#botfather"
+        ],
+        [
+          "Tutorial oficial de bots",
+          "https://core.telegram.org/bots/tutorial"
+        ]
+      ]
+    },
+    "email": {
+      "name": "Correo",
+      "intro": "Kaizen Study envía el aviso desde tu propia cuenta de correo a ti mismo. Necesitas una «contraseña de aplicación», no tu contraseña normal.",
+      "steps": [
+        "Gmail: servidor smtp.gmail.com, puerto 587, STARTTLS. Activa la verificación en 2 pasos y crea una contraseña de aplicación (16 letras).",
+        "Outlook / Hotmail: smtp-mail.outlook.com, puerto 587, STARTTLS. Microsoft está limitando este método en cuentas personales; puede no funcionar.",
+        "Yahoo: smtp.mail.yahoo.com, puerto 465, SSL/TLS, con contraseña de aplicación.",
+        "iCloud: smtp.mail.me.com, puerto 587, STARTTLS, con contraseña específica de app.",
+        "En «Tu correo» escribe tu dirección completa. Deja «Enviar a» vacío para recibirlo tú mismo.",
+        "Pega la contraseña de aplicación, pulsa «Guardar», activa el canal y pulsa «Enviar prueba»."
+      ],
+      "links": [
+        [
+          "Gmail: contraseñas de aplicación",
+          "https://support.google.com/accounts/answer/185833"
+        ],
+        [
+          "Outlook: configuración SMTP",
+          "https://support.microsoft.com/office/pop-imap-and-smtp-settings-8361e398-8af4-4e97-b147-6c6c4ac95353"
+        ],
+        [
+          "Yahoo: contraseñas de aplicación",
+          "https://help.yahoo.com/kb/SLN15241.html"
+        ],
+        [
+          "iCloud: contraseñas específicas de app",
+          "https://support.apple.com/102654"
+        ]
+      ]
+    }
+  }
+}
