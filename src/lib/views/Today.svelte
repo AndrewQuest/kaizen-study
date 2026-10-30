@@ -105,7 +105,7 @@
     <section class="planned">
       <h2>{t("calendar.today_planned")}</h2>
       <div class="list">
-        {#each planned as p (p.plan_id)}<PlannedItem item={p} />{/each}
+        {#each planned as p (p.plan_id + p.original_date)}<PlannedItem item={p} />{/each}
       </div>
     </section>
   {/if}

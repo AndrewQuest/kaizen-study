@@ -5,6 +5,7 @@
   import { t } from "$lib/i18n/i18n.svelte";
   import RateDialog from "$lib/components/RateDialog.svelte";
   import StartDialog from "$lib/components/StartDialog.svelte";
+  import UpdateDialog from "$lib/components/UpdateDialog.svelte";
   import Notes from "$lib/views/Notes.svelte";
   import Reviews from "$lib/views/Reviews.svelte";
   import Session from "$lib/views/Session.svelte";
@@ -92,6 +93,7 @@
 
   {#if app.startOpen}<StartDialog />{/if}
   {#if app.justFinished}<RateDialog />{/if}
+  {#if app.info?.data_dir}<UpdateDialog />{/if}
 {/if}
 
 {#if app.toast}

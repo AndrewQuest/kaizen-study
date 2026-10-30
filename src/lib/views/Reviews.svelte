@@ -5,7 +5,8 @@
   import { t, tList } from "$lib/i18n/i18n.svelte";
   import Heatmap from "$lib/components/Heatmap.svelte";
   import PlanDialog from "$lib/components/PlanDialog.svelte";
-  import PlannedItem from "$lib/components/PlannedItem.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import PlannedItem, { movePlanned } from "$lib/components/PlannedItem.svelte";
   import ReviewItem from "$lib/components/ReviewItem.svelte";
 
   let month = $state(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
@@ -72,8 +73,21 @@
     };
   }
 
-  async function edit(item: PlannedOccurrence) {
-    editing = await api.getPlanned(item.plan_id);
+  // Drag & drop of a planned study onto a calendar day.
+  let moving = $state<{ item: PlannedOccurrence; date: string } | null>(null);
+  function dropped(item: PlannedOccurrence, date: string) {
+    if (item.repeats) moving = { item, date };
+    else move(item, date, "series");
+  }
+  async function move(item: PlannedOccurrence, date: string, scope: "one" | "series") {
+    moving = null;
+    try {
+      await movePlanned(item, date, scope);
+      selected = date;
+      app.refresh();
+    } catch (e) {
+      app.fail(e);
+    }
   }
 
   function saved() {
@@ -91,7 +105,7 @@
     <h1 class="grow">{t("calendar.title")}</h1>
     <button class="btn primary" onclick={() => newPlan()}>{t("calendar.plan")}</button>
   </div>
-  <p class="faint explain">{t("reviews.explain")}</p>
+  <p class="faint explain">{t("reviews.explain")} {t("calendar.drag_hint")}</p>
 
   <div class="layout">
     <div class="col">
@@ -106,7 +120,7 @@
           {#each days as d}
             {@const key = isoDate(d)}
             <button class="day" class:other={d.getMonth() !== month.getMonth()} class:today={key === today}
-              class:sel={key === selected} class:exam={!!examsByDay[key]} onclick={() => (selected = key)}
+              class:sel={key === selected} class:exam={!!examsByDay[key]} data-date={key} onclick={() => (selected = key)}
               ondblclick={() => newPlan(key)}>
               <span class="num">{d.getDate()}</span>
               <span class="marks">
@@ -143,8 +157,8 @@
         {#each examsByDay[selected] ?? [] as ex (ex.topic_id)}
           <div class="exam-line">🎓 {t("calendar.exam")}: <strong>{ex.topic_name}</strong> · {ex.subject_name}</div>
         {/each}
-        {#each plannedByDay[selected] ?? [] as p (p.plan_id + p.date)}
-          <PlannedItem item={p} onedit={() => edit(p)} />
+        {#each plannedByDay[selected] ?? [] as p (p.plan_id + p.original_date)}
+          <PlannedItem item={p} ondrop={dropped} />
         {/each}
         {#if selected === today}
           {#each due as r (r.id)}<ReviewItem review={r} />{/each}
@@ -157,8 +171,8 @@
 
       <section class="card">
         <h3>{t("calendar.next7")}</h3>
-        {#each next7 as p (p.plan_id + p.date)}
-          <PlannedItem item={p} showDate={shortDay(p.date)} />
+        {#each next7 as p (p.plan_id + p.original_date)}
+          <PlannedItem item={p} showDate={shortDay(p.date)} ondrop={dropped} />
         {/each}
         {#each next7Reviews as r (r.id)}
           <div class="mini-line">
@@ -184,6 +198,18 @@
     </div>
   </div>
 </div>
+
+{#if moving}
+  {@const m = moving}
+  <Modal title={t("calendar.series_title")} onclose={() => (moving = null)} width={420}>
+    <p>{t("calendar.series_move")}</p>
+    {#snippet footer()}
+      <button class="btn" onclick={() => (moving = null)}>{t("common.cancel")}</button>
+      <button class="btn" onclick={() => move(m.item, m.date, "series")}>{t("calendar.whole_series")}</button>
+      <button class="btn primary" onclick={() => move(m.item, m.date, "one")}>{t("calendar.only_this")}</button>
+    {/snippet}
+  </Modal>
+{/if}
 
 {#if editing}
   <PlanDialog plan={editing} onclose={() => (editing = null)} onsaved={saved} />

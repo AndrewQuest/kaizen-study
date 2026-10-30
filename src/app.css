@@ -238,7 +238,7 @@ label.field > textarea { width: 100%; min-width: 0; }
 .spell-item.suggestion { font-weight: 600; }
 .spell-menu hr { border: 0; border-top: 1px solid var(--stroke); margin: 4px 0; }
 
-/* ---------- Rendered Markdown extras (split preview + future export/print) ---------- */
+/* ---------- Rendered Markdown extras (split preview, export and print) ---------- */
 .md .code-block {
   position: relative; padding: 28px 16px 12px; border-radius: var(--radius);
   background: var(--code-bg); color: var(--code-fg); border: 1px solid var(--code-border);

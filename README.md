@@ -76,6 +76,15 @@ npm run tauri build
 
 Genera `src-tauri/target/release/bundle/nsis/*-setup.exe` y `bundle/msi/*.msi`.
 
+Las actualizaciones automáticas usan el actualizador de Tauri: cada versión publicada en
+GitHub Releases incluye el instalador, su firma (`.sig`) y `latest.json`. Para firmar hace
+falta la clave privada del actualizador (nunca en el repositorio):
+
+```powershell
+$env:TAURI_SIGNING_PRIVATE_KEY = "$env:USERPROFILE\.tauri\kaizen-study.key"
+npm run tauri build
+```
+
 ## Estructura
 
 ```
@@ -86,6 +95,8 @@ src/                     Interfaz (Svelte)
   lib/i18n/es.json       Todos los textos (para añadir idiomas: crear xx.json)
   lib/templates.ts       Plantillas de métodos de estudio
   lib/render.ts          Markdown → HTML único (vista dividida; base para exportar/imprimir)
+  lib/exporter.ts        Exportar nota/tema/materia: PDF, TXT, Markdown, impresión
+  lib/exportDocx.ts      Exportar a Word (.docx), fórmulas como imagen (MathJax)
 src-tauri/src/           Rust
   db.rs                  Esquema SQLite, migraciones y consultas
   timer.rs               Temporizador (hilo propio, preciso aunque la ventana esté oculta)
@@ -97,6 +108,7 @@ src-tauri/src/           Rust
   latex.rs               Documentos LaTeX con Tectonic (descarga opcional)
   dictation.rs           Dictado local con whisper.cpp (micrófono vía cpal)
   links.rs               Enlaces: abrir en el navegador y bloquear navegación externa
+  export.rs              Exportar a PDF (WebView2) e imprimir
   commands.rs            Comandos expuestos a la interfaz
 src-tauri/dictionaries/  Diccionarios Hunspell es/en (licencias en LICENSE-es / LICENSE-en)
 e2e/app.e2e.mjs          Prueba de extremo a extremo

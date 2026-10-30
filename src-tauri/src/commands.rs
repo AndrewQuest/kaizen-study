@@ -661,3 +661,159 @@ pub fn dictation_cancel() {
 pub fn open_external(app: AppHandle, url: String) -> Result<()> {
     crate::links::open(&app, &url)
 }
+
+// ---------- Calendar: single days and whole series ----------
+
+#[tauri::command]
+pub fn set_plan_exception(
+    state: State<AppState>,
+    plan_id: String,
+    date: String,
+    kind: String,
+    new_date: Option<String>,
+    new_time: Option<String>,
+) -> Result<()> {
+    with_db(&state, |c| db::set_plan_exception(c, &plan_id, &date, &kind, new_date.as_deref(), new_time.as_deref()))
+}
+
+#[tauri::command]
+pub fn shift_planned(state: State<AppState>, id: String, days: i64) -> Result<db::PlannedStudy> {
+    with_db(&state, |c| db::shift_planned(c, &id, days))
+}
+
+// ---------- Export / print ----------
+
+/// Document shown by the `/export` page.
+#[tauri::command]
+pub fn export_doc() -> String {
+    crate::export::doc()
+}
+
+/// Called by the `/export` page once fonts and images are loaded.
+#[tauri::command]
+pub fn export_ready() {
+    crate::export::ready();
+}
+
+#[tauri::command]
+pub fn export_set_doc(html: String) {
+    crate::export::set_doc(html);
+}
+
+/// Must be async: it creates a window (see `toggle_mini`).
+#[tauri::command]
+pub async fn export_pdf(app: AppHandle, html: String, path: String, page: crate::export::PageSetup) -> Result<()> {
+    tauri::async_runtime::spawn_blocking(move || crate::export::pdf(&app, html, path, page))
+        .await
+        .map_err(|e| e.to_string())?
+}
+
+#[tauri::command]
+pub async fn export_print(app: AppHandle, html: String) -> Result<()> {
+    crate::export::print(&app, html)
+}
+
+/// Writes an exported file (Word/TXT/Markdown): raw body = bytes, header `x-path` = destination.
+#[tauri::command]
+pub fn save_export(request: tauri::ipc::Request<'_>) -> Result<()> {
+    let tauri::ipc::InvokeBody::Raw(bytes) = request.body() else {
+        return Err("Se esperaban los bytes del archivo.".into());
+    };
+    let path = request
+        .headers()
+        .get("x-path")
+        .and_then(|v| v.to_str().ok())
+        .map(percent_decode)
+        .ok_or("Falta la ruta de destino.")?;
+    std::fs::write(path, bytes).map_err(|e| e.to_string())
+}
+
+/// Bytes of an attachment (for embedding images in Word documents).
+#[tauri::command]
+pub fn read_attachment(app: AppHandle, name: String) -> Result<tauri::ipc::Response> {
+    if name.contains(['/', '\\']) || name.contains("..") {
+        return Err("Nombre no válido".into());
+    }
+    let bytes = std::fs::read(crate::media::attach_dir(&app)?.join(name)).map_err(|e| e.to_string())?;
+    Ok(tauri::ipc::Response::new(bytes))
+}
+
+// ---------- Unused files ----------
+
+#[derive(Serialize)]
+pub struct UnusedFile {
+    /// "adjunto" or "latex"
+    kind: &'static str,
+    name: String,
+    bytes: u64,
+}
+
+fn dir_size(path: &std::path::Path) -> u64 {
+    std::fs::read_dir(path)
+        .map(|it| {
+            it.flatten()
+                .map(|e| {
+                    let p = e.path();
+                    if p.is_dir() { dir_size(&p) } else { e.metadata().map(|m| m.len()).unwrap_or(0) }
+                })
+                .sum()
+        })
+        .unwrap_or(0)
+}
+
+/// Attachments no note or quick note references, and compiled LaTeX folders of notes that
+/// no longer exist (or are no longer LaTeX documents).
+#[tauri::command]
+pub fn scan_unused(app: AppHandle, state: State<AppState>) -> Result<Vec<UnusedFile>> {
+    let (texts, latex_notes): (Vec<String>, std::collections::HashSet<String>) = with_db(&state, |c| {
+        let mut texts = Vec::new();
+        let mut st = c
+            .prepare("SELECT body_md FROM notes UNION ALL SELECT notes_md FROM sessions")
+            .map_err(|e| e.to_string())?;
+        for row in st.query_map([], |r| r.get::<_, String>(0)).map_err(|e| e.to_string())? {
+            texts.push(row.map_err(|e| e.to_string())?);
+        }
+        let mut st = c.prepare("SELECT id FROM notes WHERE layout='latexdoc'").map_err(|e| e.to_string())?;
+        let ids = st
+            .query_map([], |r| r.get::<_, String>(0))
+            .map_err(|e| e.to_string())?
+            .collect::<std::result::Result<_, _>>()
+            .map_err(|e| e.to_string())?;
+        Ok((texts, ids))
+    })?;
+    let mut out = Vec::new();
+    let attach = crate::media::attach_dir(&app)?;
+    for entry in std::fs::read_dir(&attach).map_err(|e| e.to_string())?.flatten() {
+        let name = entry.file_name().to_string_lossy().into_owned();
+        let needle = format!("[[{name}");
+        if entry.path().is_file() && !texts.iter().any(|t| t.contains(&needle)) {
+            out.push(UnusedFile { kind: "adjunto", name, bytes: entry.metadata().map(|m| m.len()).unwrap_or(0) });
+        }
+    }
+    if let Ok(dirs) = std::fs::read_dir(crate::latex::output_root()) {
+        for entry in dirs.flatten() {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            if entry.path().is_dir() && !latex_notes.contains(&name) {
+                out.push(UnusedFile { kind: "latex", bytes: dir_size(&entry.path()), name });
+            }
+        }
+    }
+    out.sort_by(|a, b| b.bytes.cmp(&a.bytes));
+    Ok(out)
+}
+
+#[tauri::command]
+pub fn delete_unused(app: AppHandle, files: Vec<(String, String)>) -> Result<()> {
+    let attach = crate::media::attach_dir(&app)?;
+    for (kind, name) in files {
+        if name.is_empty() || name.contains(['/', '\\']) || name.contains("..") {
+            continue;
+        }
+        let _ = match kind.as_str() {
+            "adjunto" => std::fs::remove_file(attach.join(&name)),
+            "latex" => std::fs::remove_dir_all(crate::latex::output_root().join(&name)),
+            _ => Ok(()),
+        };
+    }
+    Ok(())
+}

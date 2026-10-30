@@ -192,6 +192,7 @@
     null,
     { label: "`", title: t("editor.code"), run: run((v) => cmd.toggleInline(v, "`")), cls: "mono" },
     { label: "∑", title: t("editor.latex"), run: run(cmd.latexBlock), cls: "math" },
+    { label: "$x$", title: t("editor.latex_inline"), run: run(cmd.inlineMath), cls: "math-inline" },
     { label: "🔗", title: t("editor.link"), run: run(cmd.link) },
     { label: "🖼", title: t("editor.media"), run: () => void pickMedia() },
     { label: "▦", title: t("editor.table"), run: run(cmd.table) },
@@ -293,6 +294,7 @@
   .tool.s { text-decoration: line-through; }
   .tool.mono { font-family: var(--mono); font-weight: 600; }
   .tool.math { font-family: Georgia, serif; font-size: 20px; }
+  .tool.math-inline { font-family: Georgia, serif; font-style: italic; font-size: 15px; }
   .tool.guide, .tool.view-mode { color: var(--accent); font-weight: 600; font-size: 14px; }
   .tool.mic.rec { color: var(--danger); font-weight: 600; font-size: 14px; animation: blink 1.2s ease-in-out infinite; }
   @keyframes blink { 50% { opacity: 0.55; } }

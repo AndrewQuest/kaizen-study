@@ -5,10 +5,12 @@
   import { duration, shortDateTime } from "$lib/format";
   import { t } from "$lib/i18n/i18n.svelte";
   import { TEMPLATES, templateById } from "$lib/templates";
+  import ExportDialog from "./ExportDialog.svelte";
 
   let { id, onback }: { id: string; onback: () => void } = $props();
 
   let topic = $state<Topic | null>(null);
+  let exporting = $state(false);
   let sessions = $state<Session[]>([]);
   let notes = $state<Note[]>([]);
 
@@ -70,6 +72,7 @@
         <h1 class="grow">{topic.name}</h1>
         <button class="btn" onclick={() => (renaming = topic!.name)}>{t("common.edit")}</button>
       {/if}
+      <button class="btn" onclick={() => (exporting = true)}>{t("export.button")}</button>
       <button class="btn danger" onclick={remove}>{t("common.delete")}</button>
       <button class="btn primary" onclick={() => app.openStart(topic!.id)}>▶ {t("topic.study")}</button>
     </div>
@@ -139,6 +142,10 @@
       {/each}
     </div>
   </div>
+{/if}
+
+{#if exporting && topic}
+  <ExportDialog scope="topic" topicId={topic.id} subjectId={topic.subject_id} onclose={() => (exporting = false)} />
 {/if}
 
 <style>

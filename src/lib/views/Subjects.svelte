@@ -6,6 +6,7 @@
   import { t } from "$lib/i18n/i18n.svelte";
   import SubjectDialog from "$lib/components/SubjectDialog.svelte";
   import TopicDetail from "$lib/components/TopicDetail.svelte";
+  import ExportDialog from "$lib/components/ExportDialog.svelte";
 
   let subjects = $state<Subject[]>([]);
   let topics = $state<Topic[]>([]);
@@ -67,6 +68,7 @@
     app.subjectId = null;
     app.refresh();
   }
+  let exporting = $state(false);
 </script>
 
 <div class="layout">
@@ -98,6 +100,7 @@
           <span class="big-icon" style:background="{subject.color}22">{subject.icon}</span>
           <h1 class="grow">{subject.name}</h1>
           <button class="btn" onclick={() => (editing = subject)}>{t("common.edit")}</button>
+          <button class="btn" onclick={() => (exporting = true)}>{t("export.button")}</button>
           <button class="btn" onclick={toggleArchive}>{subject.archived ? t("subjects.unarchive") : t("subjects.archive")}</button>
           <button class="btn danger" onclick={remove}>{t("common.delete")}</button>
         </div>
@@ -133,6 +136,10 @@
 {#if editing}
   <SubjectDialog subject={editing} onclose={() => (editing = null)}
     onsaved={(s) => { app.subjectId = s.id; editing = null; app.refresh(); }} />
+{/if}
+
+{#if exporting && subject}
+  <ExportDialog scope="subject" subjectId={subject.id} onclose={() => (exporting = false)} />
 {/if}
 
 <style>

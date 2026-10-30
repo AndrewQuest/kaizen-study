@@ -152,6 +152,24 @@ export interface PlannedOccurrence {
   time: string;
   duration_min: number;
   repeats: boolean;
+  /** Date of the series this occurrence belongs to (differs from `date` when moved). */
+  original_date: string;
+  status: "pending" | "done" | "skipped";
+}
+
+export type PlanExceptionKind = "" | "deleted" | "skipped" | "done" | "moved";
+
+export interface PageSetup {
+  width: number;
+  height: number;
+  landscape: boolean;
+  margin: number;
+}
+
+export interface UnusedFile {
+  kind: "adjunto" | "latex";
+  name: string;
+  bytes: number;
 }
 
 export interface Exam {
@@ -285,6 +303,20 @@ export const api = {
   getPlanned: (id: string) => invoke<PlannedStudy>("get_planned", { id }),
   deletePlanned: (id: string) => invoke<void>("delete_planned", { id }),
   plannedOccurrences: (from: string, to: string) => invoke<PlannedOccurrence[]>("planned_occurrences", { from, to }),
+  setPlanException: (planId: string, date: string, kind: PlanExceptionKind, newDate: string | null = null, newTime: string | null = null) =>
+    invoke<void>("set_plan_exception", { planId, date, kind, newDate, newTime }),
+  shiftPlanned: (id: string, days: number) => invoke<PlannedStudy>("shift_planned", { id, days }),
+
+  exportDoc: () => invoke<string>("export_doc"),
+  exportReady: () => invoke<void>("export_ready"),
+  exportPdf: (html: string, path: string, page: PageSetup) => invoke<void>("export_pdf", { html, path, page }),
+  exportPrint: (html: string) => invoke<void>("export_print", { html }),
+  saveExport: (path: string, bytes: Uint8Array) =>
+    invoke<void>("save_export", bytes, { headers: { "x-path": encodeURIComponent(path) } }),
+  readAttachment: (name: string) => invoke<ArrayBuffer>("read_attachment", { name }),
+  scanUnused: () => invoke<UnusedFile[]>("scan_unused"),
+  deleteUnused: (files: [string, string][]) => invoke<void>("delete_unused", { files }),
+
   upcomingExams: () => invoke<Exam[]>("upcoming_exams"),
 
   listQuickNotes: (topicId: string) => invoke<Session[]>("list_quick_notes", { topicId }),

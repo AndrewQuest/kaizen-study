@@ -9,8 +9,10 @@
   import MarkdownView from "$lib/components/MarkdownView.svelte";
   import LatexNoteEditor from "$lib/components/LatexNoteEditor.svelte";
   import MoveQuickNoteDialog from "$lib/components/MoveQuickNoteDialog.svelte";
+  import ExportDialog from "$lib/components/ExportDialog.svelte";
 
   let subjects = $state<Subject[]>([]);
+  let exporting = $state(false);
   let topicsBySubject = $state<Record<string, Topic[]>>({});
   let notes = $state<Note[]>([]);
   let quick = $state<Session[]>([]);
@@ -332,6 +334,7 @@
         <select value={current.layout} onchange={(e) => setLayout(e.currentTarget.value as NoteLayout)} title={t("notes.layout")}>
           {#each LAYOUTS as l}<option value={l}>{t(`notes.layout_${l}`)}</option>{/each}
         </select>
+        <button class="btn" onclick={async () => (await flush(), (exporting = true))}>{t("export.button")}</button>
         <button class="btn danger" onclick={remove}>{t("common.delete")}</button>
       </div>
       {#key current.id + current.layout}
@@ -363,6 +366,12 @@
 
 {#if moving && currentQuick}
   <MoveQuickNoteDialog session={currentQuick} {notes} onclose={() => (moving = false)} ondone={moved} />
+{/if}
+
+{#if exporting && current}
+  <ExportDialog scope="note" note={current} topicId={current.topic_id}
+    subjectId={Object.entries(topicsBySubject).find(([, ts]) => ts.some((x) => x.id === current!.topic_id))?.[0]}
+    onclose={() => (exporting = false)} />
 {/if}
 
 <style>

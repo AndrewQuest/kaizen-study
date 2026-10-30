@@ -6,6 +6,7 @@ import { type Extension, type Range, StateEffect } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import { api } from "$lib/api";
 import { app } from "$lib/app.svelte";
+import { INLINE_MATH_RE } from "$lib/render";
 import { t } from "$lib/i18n/i18n.svelte";
 
 const SKIP_NODES = new Set([
@@ -46,6 +47,7 @@ function visibleWords(view: EditorView): Word[] {
       },
     });
     const text = state.sliceDoc(from, to);
+    for (const m of text.matchAll(INLINE_MATH_RE)) skip.push([from + m.index!, from + m.index! + m[0].length]);
     for (const m of text.matchAll(WORD)) {
       const start = from + m.index!;
       const word = m[0].replace(/['’]+$/, "");

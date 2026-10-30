@@ -1,6 +1,7 @@
 mod commands;
 mod db;
 mod dictation;
+mod export;
 mod latex;
 mod links;
 mod media;
@@ -26,6 +27,8 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(links::navigation_guard())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
@@ -121,6 +124,17 @@ pub fn run() {
             commands::toggle_mini,
             commands::show_main,
             commands::open_external,
+            commands::set_plan_exception,
+            commands::shift_planned,
+            commands::export_doc,
+            commands::export_ready,
+            commands::export_set_doc,
+            commands::export_pdf,
+            commands::export_print,
+            commands::save_export,
+            commands::read_attachment,
+            commands::scan_unused,
+            commands::delete_unused,
             commands::list_activities,
             commands::save_activity,
             commands::delete_activity,

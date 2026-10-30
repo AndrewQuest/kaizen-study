@@ -8,7 +8,7 @@
 //
 // Close any running Kaizen Study first (the app is single-instance).
 import { spawn, execSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createServer } from "node:http";
@@ -179,6 +179,9 @@ $bmp.Save('${out.replace(/'/g, "''")}')`;
 // By accessible name: works with the menu expanded or compact (icons only).
 const nav = (name) => page.locator("nav").getByRole("button", { name, exact: true }).click();
 const button = (name) => page.getByRole("button", { name, exact: false });
+/** Native dialogs can't be driven: "save" returns `path`, "ask" answers yes (see src/lib/dialogs.ts). */
+const stubDialogs = (path = null) => page.evaluate((p) => (window.__e2eDialogs = { save: p, ask: true }), path);
+const unstubDialogs = () => page.evaluate(() => delete window.__e2eDialogs);
 // ---------- test run ----------
 
 async function main() {
@@ -502,6 +505,26 @@ async function main() {
     await page.locator("main .cm-md-latex .katex").waitFor();
     await shot("v3-03-latex-block");
   });
+  await check("fórmula en línea $...$: se muestra al salir y los precios no son fórmulas", async () => {
+    await page.locator("main .cm-content").click();
+    await page.keyboard.press("Control+End");
+    await page.keyboard.insertText("\nEnergía $E = mc^2$ y cuesta $20 o $30.\n");
+    await page.locator("main .title").click();
+    await page.locator("main .cm-md-math .katex").first().waitFor();
+    const n = await page.locator("main .cm-md-math").count();
+    assert(n === 1, `fórmulas en línea: ${n} (los precios no deben serlo)`);
+    await page.locator("main .cm-content").click();
+    await page.keyboard.press("Control+End");
+    await page.keyboard.insertText("Pitágoras a^2+b^2");
+    for (let i = 0; i < "a^2+b^2".length; i++) await page.keyboard.press("Shift+ArrowLeft");
+    await page.keyboard.press("Control+m");
+    await page.locator("main .title").click();
+    await page.locator("main .cm-md-math").nth(1).waitFor();
+    await sleep(900);
+    const [hit] = await invoke("search_notes", { query: "Pitágoras" });
+    assert(hit?.body_md.includes("Pitágoras $a^2+b^2$"), "Ctrl+M no envolvió la selección");
+    await shot("v4-01-inline-math");
+  });
   await check("pegar un enlace: [](dirección) con el cursor listo para el título", async () => {
     const paste = (u) =>
       page.locator("main .cm-content").evaluate((el, url) => {
@@ -687,6 +710,50 @@ Hola desde Kaizen Study: $E=mc^2$
     const title = await page.locator("main .title").inputValue();
     assert(title === "Derivadas", `abrió: ${title}`);
   });
+  await check("exportar: PDF, Word, TXT y Markdown (nota) y materia completa", async () => {
+    const formats = [
+      ["PDF", "pdf", "note"],
+      ["Word (.docx)", "docx", "note"],
+      ["Texto (.txt)", "txt", "note"],
+      ["Markdown (.md)", "md", "note"],
+      ["Markdown (.md)", "materia.md", "subject"],
+    ];
+    for (const [label, ext, scope] of formats) {
+      const file = join(WORK, `export.${ext}`);
+      await stubDialogs(file);
+      await page.locator("main .head").getByRole("button", { name: "Exportar / imprimir" }).click();
+      await page.locator(".dialog .sheet .katex").first().waitFor();
+      if (scope === "subject") await page.locator(".dialog").getByText("Toda la materia").click();
+      await page.locator(".dialog .chip", { hasText: label }).click();
+      if (ext === "pdf") await shot("v4-02-export-dialog");
+      await page.locator(".dialog .footer").getByRole("button", { name: "Exportar", exact: true }).click();
+      await Promise.race([
+        page.locator(".dialog").waitFor({ state: "detached", timeout: 90000 }),
+        page.locator(".toast.error").waitFor({ timeout: 90000 }).then(async () => {
+          const msg = await page.locator(".toast.error").textContent();
+          await page.keyboard.press("Escape");
+          throw new Error(`${ext}: ${msg}`);
+        }),
+      ]);
+      assert(existsSync(file) && statSync(file).size > 200, `no se creó ${ext}`);
+    }
+    const bin = (ext) => readFileSync(join(WORK, `export.${ext}`));
+    // Kept for manual inspection.
+    for (const ext of ["pdf", "docx", "md"]) writeFileSync(join(SHOTS, `v4-export.${ext}`), bin(ext));
+    assert(bin("pdf").subarray(0, 5).toString() === "%PDF-", "el PDF no es válido");
+    assert(statSync(join(WORK, "export.pdf")).size > 20000, "el PDF parece no incluir la imagen");
+    const docx = bin("docx").toString("latin1");
+    assert(docx.startsWith("PK") && docx.includes("word/document.xml"), "el .docx no es válido");
+    assert((docx.match(/word\/media\//g) ?? []).length >= 2, "el .docx no tiene las imágenes/fórmulas");
+    const txt = bin("txt").toString("utf8");
+    writeFileSync(join(SHOTS, "v4-export.txt"), txt);
+    assert(txt.includes("Derivadas") && txt.includes("\\frac") && txt.includes("$E = mc^2$"), `TXT incompleto: ${txt.slice(0, 1500)}`);
+    const md = bin("md").toString("utf8");
+    assert(md.startsWith("# Derivadas") && md.includes("```latex"), "Markdown incompleto");
+    const all = bin("materia.md").toString("utf8");
+    assert(/^# .+\r?\n/.test(all) && all.includes("\n## Derivadas") && all.includes("\n### "), "estructura materia/tema/nota incorrecta");
+    await unstubDialogs();
+  });
 
   console.log("Enlaces: siempre en el navegador, nunca dentro de la app");
   await check("modo lectura: clic en enlaces con título, sin título, <…> y dentro de tablas", async () => {
@@ -807,6 +874,47 @@ Hola desde Kaizen Study: $E=mc^2$
     await page.locator(".dialog").getByRole("button", { name: "Volver" }).click();
     await page.locator(".pick.on", { hasText: "Derivadas" }).waitFor();
     await page.keyboard.press("Escape");
+  });
+  await check("calendario: hecho, saltar, arrastrar a otro día y eliminar solo un día", async () => {
+    await nav("Calendario");
+    const today = isoDate();
+    const tomorrow = addDays(1);
+    const occ = async (date) => (await invoke("planned_occurrences", { from: date, to: date }))[0];
+    const detail = page.locator(".layout .col").nth(1).locator(".card").first();
+    const item = detail.locator(".item").first();
+    await item.getByRole("button", { name: "Hecho", exact: true }).click();
+    await detail.locator(".item.done").waitFor();
+    assert((await occ(today))?.status === "done", "no quedó como hecho");
+    await item.getByRole("button", { name: "Desmarcar hecho" }).click();
+    await item.getByRole("button", { name: "Saltar este día" }).click();
+    await detail.locator(".item.skipped").waitFor();
+    assert((await occ(today))?.status === "skipped", "no quedó saltado");
+    await shot("v4-03-calendar-skipped");
+    await item.getByRole("button", { name: "Volver a planificar" }).click();
+    await detail.locator(".item:not(.skipped):not(.done)").waitFor();
+    // Drag the day to tomorrow (pointer events), only this day.
+    const from = await item.locator(".info").boundingBox();
+    const to = await page.locator(`.day[data-date="${tomorrow}"]`).boundingBox();
+    await page.mouse.move(from.x + 20, from.y + from.height / 2);
+    await page.mouse.down();
+    for (let i = 1; i <= 12; i++) {
+      await page.mouse.move(from.x + 20 + ((to.x + to.width / 2 - from.x - 20) * i) / 12, from.y + from.height / 2 + ((to.y + to.height / 2 - from.y - from.height / 2) * i) / 12);
+      await sleep(20);
+    }
+    await page.mouse.up();
+    await page.locator(".dialog").getByRole("button", { name: "Solo este día" }).click();
+    await sleep(500);
+    const moved = await occ(tomorrow);
+    assert(moved?.original_date === today, `no se movió: ${JSON.stringify(moved)}`);
+    assert(!(await occ(today)), "sigue en el día original");
+    await shot("v4-04-calendar-moved");
+    // Delete only that day: next week's stays.
+    const before = (await invoke("planned_occurrences", { from: today, to: addDays(14) })).length;
+    await detail.locator(".item").first().getByRole("button", { name: "Eliminar" }).click();
+    await page.locator(".dialog").getByRole("button", { name: "Solo este día" }).click();
+    await sleep(500);
+    const after = (await invoke("planned_occurrences", { from: today, to: addDays(14) })).length;
+    assert(after === before - 1 && !(await occ(tomorrow)), `eliminar un día: ${before} → ${after}`);
   });
   await check("estadísticas muestran el tiempo estudiado", async () => {
     await nav("Estadísticas");
@@ -998,6 +1106,20 @@ Hola desde Kaizen Study: $E=mc^2$
     await page.locator("input.goal").dispatchEvent("change");
     await nav("Hoy");
     await page.getByText("¡Meta cumplida!").waitFor();
+  });
+  await check("buscar y eliminar archivos sin usar (respeta los usados)", async () => {
+    writeFileSync(join(DATA, "adjuntos", "huerfano.png"), Buffer.alloc(2048, 1));
+    await nav("Ajustes");
+    await page.getByRole("button", { name: "Buscar archivos sin usar" }).click();
+    await page.locator(".file", { hasText: "huerfano.png" }).waitFor();
+    assert((await page.locator(".file", { hasText: "image.png" }).count()) === 0, "marca como sin usar un adjunto en uso");
+    await shot("v4-05-unused-files");
+    await stubDialogs();
+    await page.getByRole("button", { name: /Eliminar seleccionados/ }).click();
+    await page.getByText("No hay archivos sin usar.").waitFor();
+    assert(!existsSync(join(DATA, "adjuntos", "huerfano.png")), "no se eliminó");
+    assert(existsSync(join(DATA, "adjuntos", "image.png")), "se eliminó un adjunto en uso");
+    await unstubDialogs();
   });
   await check("exportar e importar respaldo restaura los datos", async () => {
     const file = join(WORK, "respaldo.kaizen");

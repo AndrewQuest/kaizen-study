@@ -13,8 +13,7 @@ import {
 } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import { api } from "$lib/api";
-import { renderMarkdown } from "$lib/markdown";
-import { EMBED_RE, IMAGE_EXT, LATEX_LANGS, VIDEO_EXT, attachmentUrl, latexHtml } from "$lib/render";
+import { EMBED_RE, IMAGE_EXT, INLINE_MATH_RE, LATEX_LANGS, VIDEO_EXT, attachmentUrl, latexHtml, renderFragment } from "$lib/render";
 import { t } from "$lib/i18n/i18n.svelte";
 
 // ---------- Widgets ----------
@@ -100,6 +99,25 @@ class FenceWidget extends WidgetType {
   }
 }
 
+/** `$...$` inside a line, rendered with KaTeX at text size. */
+class InlineMathWidget extends WidgetType {
+  constructor(readonly source: string) {
+    super();
+  }
+  eq(other: InlineMathWidget) {
+    return other.source === this.source;
+  }
+  toDOM() {
+    const el = document.createElement("span");
+    el.className = "cm-md-math";
+    el.innerHTML = latexHtml(this.source, false);
+    return el;
+  }
+  ignoreEvent() {
+    return false;
+  }
+}
+
 class LatexWidget extends WidgetType {
   constructor(readonly source: string) {
     super();
@@ -171,7 +189,7 @@ class TableWidget extends WidgetType {
   toDOM() {
     const el = document.createElement("div");
     el.className = "cm-md-table";
-    el.innerHTML = renderMarkdown(this.source);
+    el.innerHTML = renderFragment(this.source);
     return el;
   }
   ignoreEvent() {
@@ -220,12 +238,23 @@ function build(view: EditorView): DecorationSet {
   const nextIsSpace = (pos: number) => state.sliceDoc(pos, pos + 1) === " ";
 
   const { from, to } = view.viewport;
+  const text = state.sliceDoc(from, to);
+  // Inline math: Markdown marks inside a formula (e.g. `_` or `*`) must not be styled.
+  const math = [...text.matchAll(INLINE_MATH_RE)].map((m) => ({
+    from: from + m.index!,
+    to: from + m.index! + m[0].length,
+    source: m[1],
+  }));
+  const inMath = (a: number, b: number) => math.some((m) => a >= m.from && b <= m.to);
   syntaxTree(state).iterate({
     from,
     to,
     enter: (ref) => {
       const name = ref.name;
       const node = ref.node;
+      if ((name in INLINE_CLASS || name === "Link" || name === "URL") && name !== "InlineCode" && inMath(ref.from, ref.to)) {
+        return false;
+      }
 
       if (name.startsWith("ATXHeading")) {
         lineClass(ref.from, `cm-md-h cm-md-h${name.slice(10)}`);
@@ -336,8 +365,14 @@ function build(view: EditorView): DecorationSet {
     },
   });
 
+  // Inline math outside code: formula when the cursor is away, `$...$` source when on it.
+  for (const m of math) {
+    if (codeRanges.some(([a, b]) => m.from >= a && m.from < b)) continue;
+    if (touches(m.from, m.to)) decos.push(Decoration.mark({ class: "cm-md-math-src" }).range(m.from, m.to));
+    else decos.push(Decoration.replace({ widget: new InlineMathWidget(m.source) }).range(m.from, m.to));
+  }
+
   // Attachment embeds (not part of the Markdown grammar): scan the visible text.
-  const text = state.sliceDoc(from, to);
   for (const m of text.matchAll(EMBED_RE)) {
     const start = from + m.index!;
     const end = start + m[0].length;

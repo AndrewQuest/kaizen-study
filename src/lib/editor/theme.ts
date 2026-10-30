@@ -124,6 +124,10 @@ export const editorTheme = EditorView.theme({
   },
   ".cm-md-fence-copy:hover": { color: "var(--code-fg)", background: "var(--code-hover)" },
 
+  // Inline math
+  ".cm-md-math": { padding: "0 1px", cursor: "text" },
+  ".cm-md-math-src": { fontFamily: "var(--mono)", fontSize: "0.9em", color: "var(--tok-number)" },
+
   // Spell checking
   ".cm-misspelled": {
     textDecoration: "underline wavy var(--danger)",

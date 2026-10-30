@@ -134,6 +134,9 @@ export function table(view: EditorView): boolean {
 
 export const rule = (view: EditorView) => insertBlock(view, "---\n");
 
+/** Inline formula `$...$`: wraps the selection, or inserts `$$` with the cursor in the middle. */
+export const inlineMath = (view: EditorView) => toggleInline(view, "$");
+
 /** ```latex block with the cursor inside, ready to type a formula. */
 export const latexBlock = (view: EditorView) => insertBlock(view, "```latex\n\n```\n", "```latex\n".length);
 
@@ -144,4 +147,5 @@ export const formatKeymap: KeyBinding[] = [
   { key: "Mod-e", run: (v) => toggleInline(v, "`") },
   { key: "Mod-Shift-e", run: (v) => codeBlock(v) },
   { key: "Mod-k", run: link },
+  { key: "Mod-m", run: inlineMath },
 ];

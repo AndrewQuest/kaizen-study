@@ -161,6 +161,14 @@ pub fn start(
             (id, 0, 0)
         }
     };
+    // A resumed session continues counting its completed focus blocks.
+    let done_blocks: u32 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM blocks WHERE session_id=?1 AND kind='focus' AND completed=1",
+            [&session_id],
+            |r| r.get(0),
+        )
+        .unwrap_or(0);
     let block_id = db::insert_block(conn, &session_id, "focus")?;
     let t = ActiveTimer {
         session_id,
@@ -175,7 +183,7 @@ pub fn start(
         block_id,
         block_ms: 0,
         paused: false,
-        cycle: 0,
+        cycle: done_blocks,
         focus_ms: focus_s as u128 * 1000,
         break_ms: break_s as u128 * 1000,
         unsaved_ms: 0,

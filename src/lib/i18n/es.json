@@ -506,7 +506,9 @@
     "locked": "Lectura",
     "unlocked": "Edición",
     "lock_hint": "Modo lectura: los enlaces se abren con un clic. Doble clic sobre el texto (o este botón) para editar.",
-    "unlock_hint": "Bloquear la nota (modo lectura)"
+    "unlock_hint": "Bloquear la nota (modo lectura)",
+    "latex_inline": "Fórmula en línea $x$ (Ctrl+M)",
+    "export": "📤 Exportar / imprimir"
   },
   "guide": {
     "title": "Guía de Markdown",
@@ -551,6 +553,18 @@
       [
         "Ctrl + K",
         "Enlace"
+      ],
+      [
+        "Ctrl + M",
+        "Fórmula en línea ($x$)"
+      ],
+      [
+        "Ctrl + Shift + D",
+        "Dictar"
+      ],
+      [
+        "Ctrl + 1 … 7",
+        "Ir a Hoy, Materias, Sesión, Notas, Calendario, Estadísticas o Ajustes"
       ],
       [
         "Tab / Shift + Tab",
@@ -675,6 +689,15 @@
         "tip": "\\frac{a}{b} fracción · x^2 potencia · x_i subíndice · \\sqrt{x} raíz · \\int_a^b integral · \\sum_{i=1}^n suma · \\alpha \\beta \\pi letras griegas."
       },
       {
+        "id": "latex_inline",
+        "icon": "$x$",
+        "title": "Fórmulas dentro de una frase",
+        "when": "Para una fórmula corta en medio del texto, como la velocidad $v = d/t$.",
+        "how": "Rodea la fórmula con signos de dólar: $fórmula$. No dejes espacio justo después del primer $ ni justo antes del último. Al salir de la fórmula se muestra con formato; con el cursor encima ves el código para editarlo. Para escribir un signo de dólar normal, usa \\$ (por ejemplo, \\$20).",
+        "example": "La energía es $E = mc^2$ y el área del círculo es $A = \\pi r^2$.\nEl libro cuesta \\$15.",
+        "tip": "Atajo: selecciona la fórmula y pulsa Ctrl+M, o usa el botón $x$ de la barra. Para fórmulas grandes en su propia línea usa el bloque ∑."
+      },
+      {
         "id": "media",
         "icon": "🖼",
         "title": "Imágenes y videos",
@@ -775,7 +798,24 @@
     "planned": "Planificado",
     "review": "Repaso",
     "today_planned": "Planificado para hoy",
-    "need_topic": "Primero crea una materia y un tema."
+    "need_topic": "Primero crea una materia y un tema.",
+    "edit": "Editar",
+    "remove": "Eliminar",
+    "done": "Hecho",
+    "undo_done": "Desmarcar hecho",
+    "skip": "Saltar este día",
+    "unskip": "Volver a planificar",
+    "status_done": "Hecho",
+    "status_skipped": "Saltado",
+    "series_title": "Estudio que se repite",
+    "series_edit": "Este estudio se repite. ¿Qué quieres editar?",
+    "series_delete": "Este estudio se repite. ¿Qué quieres eliminar?",
+    "series_move": "Este estudio se repite. ¿Qué quieres mover?",
+    "only_this": "Solo este día",
+    "whole_series": "Toda la serie",
+    "delete_one_confirm": "¿Eliminar este estudio planificado?",
+    "day_edit_title": "Cambiar solo este día",
+    "drag_hint": "Arrastra un estudio a otro día para moverlo."
   },
   "spell": {
     "suggestions": "Sugerencias",
@@ -909,5 +949,68 @@
         ]
       ]
     }
+  },
+  "export": {
+    "title": "Exportar / imprimir",
+    "button": "📤 Exportar / imprimir",
+    "scope": "Qué exportar",
+    "scope_note": "Esta nota",
+    "scope_topic": "Todo el tema",
+    "scope_subject": "Toda la materia",
+    "quick_notes": "Incluir las notas rápidas de las sesiones",
+    "quick_notes_heading": "Notas rápidas",
+    "format": "Formato",
+    "pdf": "PDF",
+    "docx": "Word (.docx)",
+    "txt": "Texto (.txt)",
+    "md": "Markdown (.md)",
+    "print": "Imprimir",
+    "paper": "Tamaño de hoja",
+    "letter": "Carta",
+    "a4": "A4",
+    "legal": "Oficio / Legal (8,5 × 14 in)",
+    "a5": "A5",
+    "orientation": "Orientación",
+    "portrait": "Vertical",
+    "landscape": "Horizontal",
+    "margins": "Márgenes",
+    "narrow": "Estrecho",
+    "normal": "Normal",
+    "wide": "Amplio",
+    "font": "Tamaño de letra",
+    "small": "Pequeña",
+    "medium": "Normal",
+    "large": "Grande",
+    "save_ink": "Ahorrar tinta (fondo blanco y sin colores de fondo)",
+    "preview": "Vista previa",
+    "go": "Exportar",
+    "go_print": "Imprimir…",
+    "working": "Preparando…",
+    "done": "Exportado: {name}",
+    "empty": "No hay nada que exportar.",
+    "video": "Video: {name}",
+    "page_hint": "El tamaño de hoja, los márgenes y la letra se aplican al PDF, a Word y a la impresión."
+  },
+  "cleanup": {
+    "title": "Archivos sin usar",
+    "hint": "Busca imágenes, videos y PDFs de LaTeX que ya no usa ninguna nota, para liberar espacio.",
+    "scan": "Buscar archivos sin usar",
+    "scanning": "Buscando…",
+    "none": "No hay archivos sin usar.",
+    "found": "{n} archivos sin usar · {size}",
+    "delete": "Eliminar seleccionados",
+    "confirm": "¿Eliminar {n} archivos ({size})? No se puede deshacer.",
+    "deleted": "Archivos eliminados.",
+    "kind_adjunto": "Adjunto",
+    "kind_latex": "PDF de LaTeX"
+  },
+  "update": {
+    "title": "Actualización disponible",
+    "body": "Hay una nueva versión de Kaizen Study: {version} (tienes la {current}).",
+    "notes": "Novedades",
+    "now": "Actualizar ahora",
+    "later": "Más tarde",
+    "downloading": "Descargando… {p}",
+    "error": "No se pudo actualizar: {e}"
   }
 }

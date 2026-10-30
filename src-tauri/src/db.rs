@@ -101,6 +101,15 @@ CREATE TABLE planned_studies (
 );
 CREATE TABLE user_dictionary (word TEXT PRIMARY KEY);
 ALTER TABLE sessions ADD COLUMN notes_moved INTEGER NOT NULL DEFAULT 0;
+"#, r#"
+CREATE TABLE planned_exceptions (
+    plan_id TEXT NOT NULL REFERENCES planned_studies(id) ON DELETE CASCADE,
+    date TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    new_date TEXT,
+    new_time TEXT,
+    PRIMARY KEY (plan_id, date)
+);
 "#];
 
 pub type Result<T> = std::result::Result<T, String>;
@@ -844,6 +853,10 @@ pub struct PlannedOccurrence {
     pub time: String,
     pub duration_min: i64,
     pub repeats: bool,
+    /// Date of this occurrence in the series (differs from `date` when it was moved).
+    pub original_date: String,
+    /// "pending" | "done" | "skipped"
+    pub status: String,
 }
 
 pub fn save_planned(c: &Connection, p: &PlannedStudy) -> Result<PlannedStudy> {
@@ -869,6 +882,10 @@ pub fn save_planned(c: &Connection, p: &PlannedStudy) -> Result<PlannedStudy> {
         p.id = new_id();
         p.created_at = now();
     }
+    let prev_start: Option<String> = c
+        .query_row("SELECT start_date FROM planned_studies WHERE id=?1", [&p.id], |r| r.get(0))
+        .optional()
+        .map_err(e)?;
     c.execute(
         "INSERT INTO planned_studies (id,topic_id,template_id,start_date,time,duration_min,repeat_days,repeat_until,created_at)
          VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9)
@@ -876,6 +893,19 @@ pub fn save_planned(c: &Connection, p: &PlannedStudy) -> Result<PlannedStudy> {
         params![p.id, p.topic_id, p.template_id, p.start_date, p.time, p.duration_min, p.repeat_days, p.repeat_until, p.created_at],
     )
     .map_err(e)?;
+    // A one-off study keeps its done/skipped mark when its date changes.
+    if let (true, Some(prev)) = (p.repeat_days.is_empty(), prev_start) {
+        c.execute(
+            "DELETE FROM planned_exceptions WHERE plan_id=?1 AND (date<>?2 OR kind IN ('moved','deleted'))",
+            params![p.id, prev],
+        )
+        .map_err(e)?;
+        c.execute(
+            "UPDATE planned_exceptions SET date=?2, new_date=NULL, new_time=NULL WHERE plan_id=?1",
+            params![p.id, p.start_date],
+        )
+        .map_err(e)?;
+    }
     Ok(p)
 }
 
@@ -930,6 +960,8 @@ pub fn planned_occurrences(c: &Connection, from: &str, to: &str) -> Result<Vec<P
                     time: r.get(7)?,
                     duration_min: r.get(8)?,
                     repeats: false,
+                    original_date: String::new(),
+                    status: "pending".into(),
                 },
                 r.get::<_, String>(9)?,
                 r.get::<_, Option<String>>(10)?,
@@ -938,30 +970,124 @@ pub fn planned_occurrences(c: &Connection, from: &str, to: &str) -> Result<Vec<P
         .map_err(e)?
         .collect::<std::result::Result<Vec<_>, _>>()
         .map_err(e)?;
+    // Exceptions of single days: deleted, skipped, done, or moved to another date/time.
+    let mut exc: std::collections::HashMap<(String, String), (String, Option<String>, Option<String>)> =
+        std::collections::HashMap::new();
+    {
+        let mut st = c
+            .prepare("SELECT plan_id,date,kind,new_date,new_time FROM planned_exceptions")
+            .map_err(e)?;
+        let rows = st
+            .query_map([], |r| Ok(((r.get(0)?, r.get(1)?), (r.get(2)?, r.get(3)?, r.get(4)?))))
+            .map_err(e)?;
+        for row in rows {
+            let (k, v) = row.map_err(e)?;
+            exc.insert(k, v);
+        }
+    }
+    // A moved occurrence may come from outside [from, to]: expand a wider window, filter at the end.
+    let (wide_from, wide_to) = (from_d - Duration::days(366), to_d + Duration::days(366));
     let mut out = Vec::new();
+    let mut push = |mut occ: PlannedOccurrence| {
+        occ.original_date = occ.date.clone();
+        match exc.get(&(occ.plan_id.clone(), occ.date.clone())) {
+            Some((kind, _, _)) if kind == "deleted" => return,
+            // done/skipped may keep the new date/time of a day that had been moved first.
+            Some((kind, new_date, new_time)) => {
+                if kind != "moved" {
+                    occ.status = kind.clone();
+                }
+                if let Some(d) = new_date {
+                    occ.date = d.clone();
+                }
+                if let Some(t) = new_time {
+                    occ.time = t.clone();
+                }
+            }
+            _ => {}
+        }
+        if occ.date.as_str() >= from && occ.date.as_str() <= to {
+            out.push(occ);
+        }
+    };
     for (base, days, until) in rows {
         let Ok(start) = NaiveDate::parse_from_str(&base.date, "%Y-%m-%d") else { continue };
         let weekdays: Vec<u32> = days.split(',').filter_map(|d| d.parse().ok()).collect();
         if weekdays.is_empty() {
-            if start >= from_d && start <= to_d {
-                out.push(base);
-            }
+            push(base);
             continue;
         }
         let end = until
             .as_deref()
             .and_then(|u| NaiveDate::parse_from_str(u, "%Y-%m-%d").ok())
-            .map_or(to_d, |u| u.min(to_d));
-        let mut d = start.max(from_d);
+            .map_or(wide_to, |u| u.min(wide_to));
+        let mut d = start.max(wide_from);
         while d <= end {
             if weekdays.contains(&d.weekday().number_from_monday()) {
-                out.push(PlannedOccurrence { date: d.to_string(), repeats: true, ..base.clone() });
+                push(PlannedOccurrence { date: d.to_string(), repeats: true, ..base.clone() });
             }
             d += Duration::days(1);
         }
     }
     out.sort_by(|a, b| (&a.date, &a.time).cmp(&(&b.date, &b.time)));
     Ok(out)
+}
+
+/// Marks one occurrence (by its series date): "deleted", "skipped", "done" or "moved"
+/// (with `new_date`/`new_time`). `kind` = "" removes the exception.
+pub fn set_plan_exception(
+    c: &Connection,
+    plan_id: &str,
+    date: &str,
+    kind: &str,
+    new_date: Option<&str>,
+    new_time: Option<&str>,
+) -> Result<()> {
+    if kind.is_empty() {
+        c.execute("DELETE FROM planned_exceptions WHERE plan_id=?1 AND date=?2", params![plan_id, date])
+            .map_err(e)?;
+        return Ok(());
+    }
+    if !["deleted", "skipped", "done", "moved"].contains(&kind) {
+        return Err(format!("Tipo no válido: {kind}"));
+    }
+    c.execute(
+        "INSERT INTO planned_exceptions (plan_id,date,kind,new_date,new_time) VALUES (?1,?2,?3,?4,?5)
+         ON CONFLICT(plan_id,date) DO UPDATE SET kind=?3,new_date=?4,new_time=?5",
+        params![plan_id, date, kind, new_date, new_time],
+    )
+    .map_err(e)?;
+    Ok(())
+}
+
+/// Moves a whole plan (one-off or weekly series) by `days`, keeping its weekdays pattern.
+pub fn shift_planned(c: &Connection, id: &str, days: i64) -> Result<PlannedStudy> {
+    let mut p = get_planned(c, id)?;
+    let shift = |d: &str| -> Result<String> {
+        let date = NaiveDate::parse_from_str(d, "%Y-%m-%d").map_err(|_| "Fecha no válida".to_string())?;
+        Ok((date + Duration::days(days)).to_string())
+    };
+    p.start_date = shift(&p.start_date)?;
+    p.repeat_until = p.repeat_until.as_deref().map(shift).transpose()?;
+    p.repeat_days = p
+        .repeat_days
+        .split(',')
+        .filter_map(|d| d.parse::<i64>().ok())
+        .map(|d| ((d - 1 + days).rem_euclid(7) + 1).to_string())
+        .collect::<Vec<_>>()
+        .join(",");
+    let p = save_planned(c, &p)?;
+    if p.repeat_days.is_empty() {
+        return Ok(p); // save_planned already moved the one-off's mark
+    }
+    c.execute(
+        "UPDATE planned_exceptions SET date=date(date, ?2 || ' days'),
+           new_date=CASE WHEN new_date IS NULL THEN NULL ELSE date(new_date, ?2 || ' days') END
+         WHERE plan_id=?1",
+        params![id, format!("{days:+}")],
+    )
+    .map_err(e)?;
+    Ok(p)
 }
 
 // ---------- Exams ----------
@@ -1281,6 +1407,49 @@ mod tests {
         ]);
         assert_eq!(occ[2].duration_min, 5, "duration clamped to the minimum");
         assert!(save_planned(&c, &PlannedStudy { time: "25:00".into(), ..weekly.clone() }).is_err());
+    }
+
+    #[test]
+    fn planned_exceptions_and_series_shift() {
+        let (_d, c, t) = setup();
+        let monday = NaiveDate::from_ymd_opt(2030, 1, 7).unwrap();
+        let p = save_planned(&c, &PlannedStudy {
+            id: String::new(), topic_id: t.id.clone(), template_id: None, start_date: monday.to_string(),
+            time: "18:00".into(), duration_min: 60, repeat_days: "1,3".into(), repeat_until: None, created_at: String::new(),
+        }).unwrap();
+        let range = |c: &Connection| planned_occurrences(c, "2030-01-07", "2030-01-20").unwrap();
+        assert_eq!(range(&c).len(), 4);
+        set_plan_exception(&c, &p.id, "2030-01-07", "done", None, None).unwrap();
+        set_plan_exception(&c, &p.id, "2030-01-09", "deleted", None, None).unwrap();
+        set_plan_exception(&c, &p.id, "2030-01-14", "moved", Some("2030-01-15"), Some("09:00")).unwrap();
+        set_plan_exception(&c, &p.id, "2030-01-16", "skipped", None, None).unwrap();
+        let occ = range(&c);
+        let view: Vec<_> = occ.iter().map(|o| format!("{} {} {} {}", o.date, o.time, o.status, o.original_date)).collect();
+        assert_eq!(view, [
+            "2030-01-07 18:00 done 2030-01-07",
+            "2030-01-15 09:00 pending 2030-01-14",
+            "2030-01-16 18:00 skipped 2030-01-16",
+        ]);
+        // Moved out of the range into it: appears in the range where it landed.
+        set_plan_exception(&c, &p.id, "2030-01-23", "moved", Some("2030-01-20"), None).unwrap();
+        assert_eq!(range(&c).len(), 4);
+        set_plan_exception(&c, &p.id, "2030-01-07", "", None, None).unwrap();
+        assert_eq!(range(&c)[0].status, "pending");
+        // Whole series one day later: Tuesdays and Thursdays.
+        let shifted = shift_planned(&c, &p.id, 1).unwrap();
+        assert_eq!((shifted.start_date.as_str(), shifted.repeat_days.as_str()), ("2030-01-08", "2,4"));
+        let after = range(&c);
+        assert!(after.iter().any(|o| o.date == "2030-01-16" && o.status == "pending" && o.original_date == "2030-01-15"));
+        // Sunday + 1 = Monday (wraps around).
+        let p2 = save_planned(&c, &PlannedStudy { id: String::new(), repeat_days: "7".into(), ..p.clone() }).unwrap();
+        assert_eq!(shift_planned(&c, &p2.id, 1).unwrap().repeat_days, "1");
+        // One-off: the done mark follows the date (edited or dragged).
+        let once = save_planned(&c, &PlannedStudy { id: String::new(), repeat_days: String::new(), ..p.clone() }).unwrap();
+        set_plan_exception(&c, &once.id, &once.start_date, "done", None, None).unwrap();
+        let once = save_planned(&c, &PlannedStudy { start_date: "2030-01-10".into(), ..once }).unwrap();
+        shift_planned(&c, &once.id, 2).unwrap();
+        let o = planned_occurrences(&c, "2030-01-12", "2030-01-12").unwrap();
+        assert!(o.iter().any(|x| x.plan_id == once.id && x.status == "done"), "one-off lost its mark");
     }
 
     #[test]

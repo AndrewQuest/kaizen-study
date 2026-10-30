@@ -292,6 +292,9 @@ fn check_reminders(app: &AppHandle) {
         let tomorrow = (now.date() + Duration::days(1)).to_string();
         let mut sent = state.reminders_sent.lock().unwrap();
         for occ in db::planned_occurrences(conn, &today, &tomorrow).unwrap_or_default() {
+            if occ.status != "pending" {
+                continue;
+            }
             let Ok(at) = NaiveDateTime::parse_from_str(&format!("{} {}", occ.date, occ.time), "%Y-%m-%d %H:%M") else {
                 continue;
             };

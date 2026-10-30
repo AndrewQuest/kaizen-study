@@ -5,6 +5,7 @@
   import { isoDate } from "$lib/format";
   import { LOCALES, t } from "$lib/i18n/i18n.svelte";
   import Modal from "$lib/components/Modal.svelte";
+  import SettingsCleanup from "$lib/components/SettingsCleanup.svelte";
   import SettingsBreaks from "$lib/components/SettingsBreaks.svelte";
   import SettingsPhone from "$lib/components/SettingsPhone.svelte";
   import SettingsSpell from "$lib/components/SettingsSpell.svelte";
@@ -106,6 +107,7 @@
       <button class="btn" onclick={exportBackup}>{t("settings.export")}</button>
       <button class="btn" onclick={importBackup}>{t("settings.import")}</button>
     </div>
+    <SettingsCleanup />
   </section>
 
   <section>

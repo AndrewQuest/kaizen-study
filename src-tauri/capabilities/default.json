@@ -4,7 +4,9 @@
   "description": "Permisos de las ventanas principal y mini",
   "windows": [
     "main",
-    "mini"
+    "mini",
+    "export",
+    "export-print"
   ],
   "permissions": [
     "core:default",
@@ -17,6 +19,8 @@
     "dialog:allow-confirm",
     "autostart:default",
     "core:webview:default",
-    "core:webview:allow-set-webview-zoom"
+    "core:webview:allow-set-webview-zoom",
+    "updater:default",
+    "process:allow-restart"
   ]
 }

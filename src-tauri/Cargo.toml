@@ -1,6 +1,6 @@
 [package]
 name = "kaizen-study"
-version = "0.1.0"
+version = "0.2.0"
 description = "Kaizen Study - organizador de sesiones de estudio"
 authors = ["Andrew Gerard"]
 edition = "2024"
@@ -38,6 +38,8 @@ lettre = { version = "0.11.23", default-features = false, features = ["smtp-tran
 tauri-plugin-opener = "2.7.2"
 cpal = "0.18.2"
 whisper-rs = "0.16.0"
+tauri-plugin-updater = "2.14.1"
+tauri-plugin-process = "2.4.0"
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
@@ -47,3 +49,7 @@ lto = true
 opt-level = 3
 panic = "abort"
 strip = true
+
+[target."cfg(windows)".dependencies]
+webview2-com = "0.39.1"
+windows-core = "0.62.2"
